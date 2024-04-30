@@ -1,0 +1,83 @@
+
+" Funcion: 创建弹出菜单  {{{
+function! s:createPopupMenu()
+    call popup_create(s:menu_display_name, 
+                \ #{title: "请选择你的命令：", 
+                \ pos: 'center', 
+                \ border: [], 
+                \ zindex: 200, 
+                \ wrap: 0, 
+                \ minheight: g:menu_items_count, 
+                \ minwidth: g:menu_item_max_len, 
+                \ cursorline: 0, 
+                \ close: 'button', 
+                \ resize: v:true, 
+                \ drag: v:true, 
+                \ filter: 's:popupMenuFilter', 
+                "\ filter: 'popup_filter_menu', 
+                \ padding: [0, 1, 0, 1], 
+                \ mapping: 0, 
+                \ })
+endfunction
+" }}}
+
+
+if !hasmapto('<Plug>PopupMenu')
+    map <F9> <Plug>PopupMenu
+endif
+
+map <Plug>PopupMenu <SID>CreateMenu
+map <SID>CreateMenu :call <SID>createPopupMenu()<CR>
+
+
+
+"function! s:menuCallback(id, result)
+"    echo "callback"
+"endfunction
+
+
+"function! s:testEcho()
+"    echo "Test Ok"
+"endfunction
+
+
+      
+" Funciton: 筛选，用于处理用户按下的按键
+" Note: {{{
+" id: 
+"   弹出菜单的 id
+" key:
+"   被按下的键 
+" Return:
+" true:
+"   键已被处理
+" false:
+"   键未被处理（键会在弹出菜单关闭后，留给 vim 处理） }}}
+"let s:cnt = 0 
+function! s:popupMenuFilter(id, key)
+    if a:key == 'x'
+        call popup_close(a:id, a:key)
+        return v:true
+    endif
+    let s:idx = index(g:menu_item_shortcut, a:key)
+    "echo "count: " .. s:cnt .. "    key: " .. a:key .. "  idx: " .. s:idx
+    "let s:cnt += 1
+    "if s:idx > 0  && s:idx < g:menu_items_count
+    if !(s:idx == -1) && s:idx < g:menu_items_count
+        if type(g:menu_funcref[s:idx]) == 2
+            "echo "count: " .. s:cnt .. "    key: " .. a:key .. "  idx: " .. s:idx
+            call g:menu_funcref[s:idx]()
+        elseif type(g:menu_funcref[s:idx])  == 1
+            let result_info =  execute(g:menu_funcref[s:idx])
+            echo result_info
+        endif
+    else
+        return popup_filter_menu(a:id, a:key)
+        "return v:true
+    endif
+    call popup_close(a:id, a:key)
+    return v:true
+endfunction
+" }}}
+
+
