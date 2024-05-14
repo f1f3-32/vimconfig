@@ -9,6 +9,7 @@ cd %USERPROFILE%
 if exist vimfiles (
     echo Start copy %cd%\vimfiles to %batch_dir%\config...
     xcopy %USERPROFILE%\vimfiles /s /y %batch_dir%\config\vimfiles
+    echo Copy done.
 ) else (
     echo %USERPROFILE%\vimfiles is not exist.
 )
