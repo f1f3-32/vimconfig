@@ -1,0 +1,9 @@
+Usage: config [OPTION]...  
+
+    -c    config vim.
+    -o    obtain exist vim config to current directory.
+    -d    display exist config file and directory.
+    -h    help information.
+
+since: 2024/5/7
+author: linlin

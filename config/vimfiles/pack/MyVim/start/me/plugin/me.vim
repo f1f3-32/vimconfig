@@ -1,5 +1,6 @@
+"## map plugin cmd {{{
+""--------------------------------------------------------------------------------
 "" 映射命令 
-"{{{
 """ hasmapto 防止重复映射
 
 "没有什么用，还不如直接在 vimrc 中进行映射
@@ -31,12 +32,16 @@ endif
 
 map <Plug>GenerateDoxygen <SID>SIDGenerateDoxygen
 map <SID>SIDGenerateDoxygen :call me#GenerateDoxygenComment()<CR>
+
+if !exists(":cdir")
+    command -nargs=0 Cdir call me#ChangeShellDir()
+endif
+
 "}}}
-abc
-""" 编译源文件
+
+"## 编译源文件 {{{
 """     根据文件类型编译源文件，有新需求需要自己扩展
 function! me#Compile()
-"{{{
     execute "w"
     let winid = 0
     if &filetype == 'c'
@@ -46,7 +51,11 @@ function! me#Compile()
         "execute "!gcc % -o ./build/%< && ./build/%<"
         execut 'start cmd /c "gcc % && a.exe && pause"'
     elseif &filetype == 'cpp'
-        execute "!start cmd /c g++ % -std=c++20 & a.exe & echo. & echo _____________________ &pause "
+        if has('win32')
+            execute "!start cmd /c g++ % -std=c++20 & a.exe & echo. & echo _____________________ &pause "
+        elseif has('unix')
+            execute "!g++ % -std=c++20 && ./a.out "
+        endif
         "echo. 逗号前不要有空格，作用是换行
         "出错的话，cmd 窗口会直接关闭
     elseif &filetype == "java"
@@ -65,10 +74,10 @@ function! me#Compile()
 endfunction
 "}}}
 
+"## delimate {{{
 """ 给文件添加一个分隔线
 """     可以根据文件类型进行注释,但自动在下一行添加注释的功能会造成影响
 function! me#Divider()
-"{{{
     let filename  = split(expand('%'), '/')
     if &filetype == 'c'|| &filetype == 'cpp' || &filetype == 'java'
         execute "normal o\<Esc>80a-\<Esc>"
@@ -84,15 +93,11 @@ function! me#Divider()
 endfunction
 "}}}
 
-if !exists(":cdir")
-    command -nargs=0 Cdir call me#ChangeShellDir()
-endif
-
+"## change dir {{{
 """ 改变 vim 的目录
 """     依据当前打开文件的路径，将 vim 的路径改为相应的路径
 """ TODO: 功能待完成
 function! me#ChangeShellDir()
-"{{{
     " 获取当前文件名
     let curname=expand("%")
     " 获取路径长度
@@ -117,9 +122,9 @@ function! me#ChangeShellDir()
 endfunction
 "}}}
 
+"## extra {{{
 """提取操作
 function! s:extraImplement(decl_line, class_name)
-"{{{
     " decl line
     "====================================================
     let l:decl_line = trim(a:decl_line)
@@ -245,19 +250,7 @@ function! s:extraImplement(decl_line, class_name)
 endfunction
 "}}}
 
-"function! Find_class_name()
-    "let l:class_name_line_num = 0
-    "while let l:class_name_line_num = search("\\<class\\>", 'bn', line("0"))
-        "let line = getline(l:class_name_line_num)
-        "let is_class = match(line, "^\\s*\\<enum\\>")
-        "if is_class == 0
-        "else
-            "break;
-        "endif
-    "endwhile
-    "return l:class_name_line_num
-"endfunction
-
+"## create implemental {{{
 """ 创建实现，依据 h 文件的声明，在 cpp 文件创建实现，另一种情况，文件是 hpp
 """ 类型，则在 hpp 文件中创建
 """ 
@@ -265,7 +258,6 @@ endfunction
 """ {
 """ };
 function! me#CreateImplement()
-"{{{
     "检测是否在 h 文件中
     "====================================================
     " 对 h 文件的检测结果是 cpp，自己实现吧！
@@ -401,12 +393,11 @@ function! me#CreateImplement()
 endfunction
 "}}}
 
-
+"## code snippet {{{
 """ 代码片段
 """     通过插入横式的快捷键映射，可以使用选择代码片段
 """     补全，通过已输入的单词进行补全
 func! me#MySnippets()
-"{{{
     " 读取文件中内容，作为代码片段
     let mylist = [
                 \ "cout << << endl;", 
@@ -419,10 +410,10 @@ func! me#MySnippets()
 endfunc
 "}}}
 
+"## generate define {{{
 """ 将指针的声明改变为定义
 """ 通过定义完行调用
 function! me#GenerateDefine()
-"{{{
     let str_nums = input("GenerateDefine :")
     " 输入2，会执行3次，要减一
     let nums = 0
@@ -446,12 +437,10 @@ function! me#GenerateDefine()
 endfunction
 "}}}
 
-
+"## doxygen comment {{{
 """ 插入 doxygen 的注释
 """ 提取声明行的信息，据依生成相应的注释
 function! me#GenerateDoxygenComment()
-"{{{
-
     "let class_name_line_num = search("\\s*\\w+\\s\\+\\w\\+::", "nbW", line("0"))
     "let class_name = ""
     "if class_name_line_num
@@ -503,10 +492,10 @@ function! me#GenerateDoxygenComment()
 endfunction
 "}}}
 
+"## create new file use cursor under text {{{
 """ 使用选中的文件新建一个文件
 """ TODO: 让用户输入文件后缀
 function! me#NewFile()
-"{{{
     "let wordUnderCursor = expand("<cword>")
     execute "y"
     let select_text = getreg("a")
@@ -514,9 +503,9 @@ function! me#NewFile()
 endfunction
 "}}}
 
+"## C++ code sinppet {{{
 """ 新 C++ 文件的模板
 function! me#CppTmp()
-    "{{{
     let cppfile_temp = [
                 \ '/*******************************************************************************', 
                 \ ' * Author:   lin', 
@@ -542,17 +531,13 @@ function! me#CppTmp()
 endfunction
 "}}}
 
-"用于交换函数的标记，1 表示
-"let me#switch_file_flag = 0
-"错误用法
-
+"## switch to source {{{
 let s:switch_file_flag = 0
 """ 在 cpp 与 h 文件中切换
 """ 在光标在 h
 """ 若 cpp 没有打开，在新窗口中打开 cpp
 """ 若 cpp 已经打开，光标跳转到已打开的 cpp
 function! me#SwitchToSource()
-"{{{
     let file_type = expand("%:e")
     if s:switch_file_flag
         if file_type == "h"
@@ -573,17 +558,5 @@ function! me#SwitchToSource()
         echo "不是 C++ 文件！"
     endif
 endfunction
-"}}}
-"TODO:
-function! me#CreateClass()
-    echo "你还没有实现！"
-endfunction
-
-""" 使用命令行命令生成一套 qt 文件
-"{{{
-"function me#GenerateQtWidget()
-    " 目录操作;获取当前目录；在命令行中提示输入；输入提交后；生成 h 文件；
-    " 创建 h 文件，不创建 cpp 文件；h 文件的内容：防止重复包含的宏；
-"endfunction
 "}}}
 
