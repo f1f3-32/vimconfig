@@ -139,20 +139,26 @@ set syntax=on       " 开启语法高亮
 
 "## mapping {{{
 "--------------------------------------------------------------------------------
-nnoremap <leader>x a/*-*/<esc>
+
+"nnoremap <F5> :!start C:\Windows\SysWOW64\WindowsPowerShell\v1.0\powershell.exe -noe -c "&{Import-Module """C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\Tools\Microsoft.VisualStudio.DevShell.dll"""; Enter-VsDevShell 09c32363}"<CR>
+nnoremap <F2> :NERDTreeToggle<CR>
+"nnoremap <F2> :Vexplore<CR>
+nnoremap <F3> :tabnew<CR>
+"inoremap<F4> <C-O>:popup File<CR>
+"nnoremap <F7> :w<CR>
+nnoremap <F6> :call me#Compile()<CR>
 inoremap <F8> <C-R>=ListMonths()<CR>
+nnoremap <F8>  :w<CR>
+nnoremap <F9> :Tagbar<CR>
+nnoremap <F10> :wqa<CR>
+nnoremap <leader>x a/*-*/<esc>
 xnoremap <Leader>g :Goyo<CR>
 inoremap <silent><expr> <Tab> coc#pum#confirm()
-" :help map.txt
-"inoremap<F4> <C-O>:popup File<CR>
 xnoremap ga <Plug>(EasyAlign)
+nnoremap ga <Plug>(EasyAlign)
 vnoremap <Enter> <Plug>(EasyAlign)
 nnoremap gs :call me#SwitchToSource()<CR>
-nnoremap ga <Plug>(EasyAlign)
 noremap cx Vy
-"noremap K :
-"noremap <c-v> "+p
-"nnoremap <c-k> :
 nnoremap <Space> <C-d>
 nnoremap <M-w> <C-w>
 nnoremap <LEADER>z ZZ
@@ -160,7 +166,6 @@ nnoremap <LEADER>v :Goyo<CR>
 nnoremap <LEADER>t <c-w>T
 nnoremap <LEADER>sc :!start cmd<CR>
 nnoremap <LEADER>o  :tabnew $MYVIMRC<CR>
-"nnoremap <LEADER>mv 
 nnoremap <LEADER>ms :set foldmethod=syntax<CR>
 nnoremap <LEADER>mr :set nornu<CR>
 nnoremap <LEADER>mo :browse oldfiles<CR>
@@ -170,16 +175,9 @@ nnoremap <LEADER>i  :call me#CreateImplement()<CR>
 nnoremap <LEADER>e  :call me#GenerateDefine()<CR>
 nnoremap <LEADER>cd :cd ~/code/cpp/basic<CR>
 "nnoremap <LEADER> <Plug>(easymotion-prefix)
-nnoremap <F9> :Tagbar<CR>
-nnoremap <F5> :w<CR>
-nnoremap <F3> :tabnew<CR>
-nnoremap <F2> :Vexplore<CR>
-"nnoremap <F2> :NERDTreeToggle<CR>
-nnoremap <F10> :wqa<CR>
 nnoremap <c-q> :
 "nnoremap <c-v> <c-q> "与终端中的快捷键冲突
 nnoremap <C-n> :bel vnew<cr>
-nnoremap <F6> :call me#Compile()<CR>
 nnoremap <C-b> :call me#Compile()<CR>
 map <Leader> <Plug>(easymotion-prefix)
 "nnoremap <c-s> :w<cr>
@@ -195,19 +193,10 @@ inoremap <c-;> <Esc><Plug>(easymotion-bd-f)
 inoremap <c-q> <Esc>:
 inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-"inoremap <C-b> <Esc>:me#Compile()<CR>
 "nnoremap <LEADER>mn :set nu<CR>
 "nnoremap <LEADER>md :tabnew $HOME/AppData/Local/nvim/pack/plugins/start/me<CR>
-"nnoremap <F8> :!start C:\Windows\SysWOW64\WindowsPowerShell\v1.0\powershell.exe -c "pwd"<CR>
-"nnoremap <F7>
-"nnoremap <F6> :call me#Compile()<CR>
-"nnoremap <F5> :!start C:\Windows\SysWOW64\WindowsPowerShell\v1.0\powershell.exe -noe -c "&{Import-Module """C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\Tools\Microsoft.VisualStudio.DevShell.dll"""; Enter-VsDevShell 09c32363}"<CR>
-"nnoremap <F4> :wa<CR>
 "inoremap <S-Alt> <Esc>:w!<cr>
-"inoremap <F4> <C-R>=me#MySnippets()<CR>
 nnoremap <LEADER>d :call append(line('.'), strftime('%c'))<CR>
-"nnoremap ,f :!start powershell
-"noremap ,f :call CompileRun()<CR>
 "2024年01月13日
 "使用 window id 跳转，会出导致 cpp 文件被删除！需要改进！
 "通过命令行将文件路径传给另一个程序，它负责编译并运行这个文件。
@@ -226,7 +215,6 @@ nnoremap <LEADER>d :call append(line('.'), strftime('%c'))<CR>
 "colorscheme zaitabsu
 "colorscheme retrobox
 colorscheme sorbet
-
 
 " gaip=
 "cd $lin/cpp/basic
@@ -269,7 +257,7 @@ let g:limelight_conceal_guifg = '#777777'
 let g:limelight_conceal_guifg = 'DarkGray'
 let g:limelight_conceal_ctermfg = 240
 let g:limelight_conceal_ctermfg = 'gray'
-let $mycfg=~/.vim/pack/MyVim/start
+let $mycfg="~/.vim/pack/MyVim/start"
 let g:rainbow_active=1
 "}}} variable
 
@@ -352,7 +340,8 @@ amenu ToolBar.BuiltIn22 :!start subl.exe %<CR>
 " --------------------------------------------------------------------------------
 
 iab ce std::cout <<  << std::endl;<Left><Left><Left><Left><Left><Left><Left><Left><Left><Left><Left><Left><Left><Left><Left> 
-iab ff for(int i = 0; i < n; ++i)<CR>{<CR>}
+iab ff for(int i = 0; i < n; ++i)<CR>{<CR><SPACE><SPACE><SPACE><SPACE>
+iab rr std::random_device rd;<CR>std::uniform_int_distribution dist(0, 10);
  
 "iabbr <silent> ,, -><C-R>=Eatchar('\s')<CR>
 "}}} abbr
