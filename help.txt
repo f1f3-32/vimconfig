@@ -1,9 +1,9 @@
-Usage: config [OPTION]...  
+使用: ./config.sh [OPTION]
 
-    -c    config vim.
-    -o    obtain exist vim config to current directory.
-    -d    display exist config file and directory.
-    -h    help information.
+    -c    使本仓库的配置覆盖本机上的配置。
+    -o    使本机上的配置覆盖本仓库上的配置。
+    -d    查看配置目录
+    -h    帮助信息
 
 since: 2024/5/7
 author: linlin
