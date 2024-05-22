@@ -1,4 +1,4 @@
-" 实现一个弹出菜出，能执行函数，和命令
+" # 实现一个弹出菜出，能执行函数，和命令 {{{
 " File: popup_menu.vim
 " Author: 林林
 " Since: 2024/1/4
@@ -24,13 +24,26 @@
 " LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 " OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 " WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+"}}}
+
+"## 防止重复加载 {{{
 if exists("g:loaded_popupmenu")
     finish
 endif
 
 let loaded_popupmenu = 1
+"}}}
 
-" 基本容器与变量 {{{
+"## 插件映射 {{{
+if !hasmapto('<Plug>PopupMenu')
+    map - <Plug>PopupMenu
+endif
+
+map <Plug>PopupMenu <SID>CreateMenu
+map <SID>CreateMenu :call <SID>createPopupMenu()<CR>
+"}}}
+
+" ## 基本变量 {{{
 let menu_item_shortcut = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', ]
 let menu_items_count   = 0
 let menu_item_name     = []
@@ -40,6 +53,7 @@ let menu_item_max_len  = 0
 let s:idx = 0
 " }}}
 
+"## 添加菜单条目 {{{
 function! linlin_popup_menu#AddMenuItem(name, funcref)
     " 检测条目是否已存在
     let idx = index(g:menu_item_name, a:name)
@@ -60,24 +74,16 @@ function! linlin_popup_menu#AddMenuItem(name, funcref)
         let g:menu_item_max_len = len(display_item)
     endif
     call add(g:menu_display_name, l:display_item)
-    "endfor
-    "echo "当前菜单条目数： " .. g:menu_items_count
 endfunction
 " }}}
 
-
-
+"## 默认的菜单条目 {{{
 call linlin_popup_menu#AddMenuItem('查看缓冲',       'execute :ls')
 call linlin_popup_menu#AddMenuItem('查看标记',       'execute :marks')
 call linlin_popup_menu#AddMenuItem('查看寄存器',     'execute :register')
+" }}}
  
- if !hasmapto('<Plug>PopupMenu')
-    map - <Plug>PopupMenu
-endif
-
-map <Plug>PopupMenu <SID>CreateMenu
-map <SID>CreateMenu :call <SID>createPopupMenu()<CR>
-
+"## 创建弹出菜单 {{{
 function! s:createPopupMenu()
     call popup_create(g:menu_display_name, 
                 \ #{title: "请选择你的命令：", 
@@ -92,15 +98,15 @@ function! s:createPopupMenu()
                 \ resize: v:true, 
                 \ drag: v:true, 
                 \ filter: 's:popupMenuFilter', 
-                "\ filter: 'popup_filter_menu', 
                 \ padding: [0, 1, 0, 1], 
                 \ mapping: 0, 
                 \ })
 endfunction
 " }}}
 
+"## 筛选用户按键 {{{
 " Funciton: 筛选，用于处理用户按下的按键
-" Note: {{{
+" Note: 
 " id: 
 "   弹出菜单的 id
 " key:
@@ -109,22 +115,13 @@ endfunction
 " true:
 "   键已被处理
 " false:
-"   键未被处理（键会在弹出菜单关闭后，留给 vim 处理） }}}
-"let s:cnt = 0 
+"   键未被处理（键会在弹出菜单关闭后，留给 vim 处理） 
 function! s:popupMenuFilter(id, key)
     if a:key == 'x'
         call popup_close(a:id, a:key)
         return v:true
-"   elseif a:key == ';'
-"       "let a:key = ':' a:key 是只读变量
-"       call popup_close(a:id, a:key)
-"       return v:false
     endif
-    
     let s:idx = index(g:menu_item_shortcut, a:key)
-    "echo "count: " .. s:cnt .. "    key: " .. a:key .. "  idx: " .. s:idx
-    "let s:cnt += 1
-    "if s:idx > 0  && s:idx < g:menu_items_count
     if !(s:idx == -1) && s:idx < g:menu_items_count
         if type(g:menu_funcref[s:idx]) == 2
             "echo "count: " .. s:cnt .. "    key: " .. a:key .. "  idx: " .. s:idx
@@ -135,7 +132,6 @@ function! s:popupMenuFilter(id, key)
         endif
     else
         return popup_filter_menu(a:id, a:key)
-        "return v:true
     endif
     call popup_close(a:id, a:key)
     return v:true
