@@ -1,5 +1,6 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhistcnt =5
+let g:netrw_dirhistcnt =6
+let g:netrw_dirhist_6='D:\user\code\practice\qt\SmallPillsOfQt\CustomWindow'
 let g:netrw_dirhist_5='D:\user\code\practice\vim\vim-config'
 let g:netrw_dirhist_4='D:/user/code/practice/vim/vim-config'
 let g:netrw_dirhist_3='D:/user/code/practice/vim/vim-config/config'
@@ -9,4 +10,3 @@ let g:netrw_dirhist_0='D:\user\code\practice\qt\widgets\toExcel'
 let g:netrw_dirhist_9='D:\user\code\libraries\include\lin'
 let g:netrw_dirhist_8='C:/Users/16207/suixin/src'
 let g:netrw_dirhist_7='C:\Users\16207\suixin'
-let g:netrw_dirhist_6='C:/Users/16207/suixin/ColorWidget/src'
