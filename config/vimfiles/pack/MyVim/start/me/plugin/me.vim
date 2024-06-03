@@ -1,7 +1,6 @@
 "## map plugin cmd {{{
 ""--------------------------------------------------------------------------------
-
-"### 映射快捷键 
+"" 映射命令 
 """ hasmapto 防止重复映射
 
 "没有什么用，还不如直接在 vimrc 中进行映射
@@ -12,7 +11,6 @@
 "map <Plug>MeCompileRun <SID>CompileRun
 "map <SID>CompileRun :call me#Compile()<CR>          
 
-"- me#Divider
 if !hasmapto('<Plug>MeDivider')
     map <Leader>a <Plug>MeDivider
 endif
@@ -20,7 +18,6 @@ endif
 map <Plug>MeDivider <SID>SIDDivider
 map <SID>SIDDivider :call me#Divider()<CR>
 
-"- me#CreateImplement
 if !hasmapto('<Plug>MeImpl')
     map <Leader>d <Plug>MeImpl
 endif
@@ -28,7 +25,7 @@ endif
 map <Plug>MeImpl <SID>Implement
 map <SID>Implement :call me#CreateImplement()<CR>
 
-"- me#GenerateDoxygenComment
+
 if !hasmapto('<Plug>CreateClass')
     map <Leader>c <Plug>GenerateDoxygen
 endif
@@ -36,19 +33,8 @@ endif
 map <Plug>GenerateDoxygen <SID>SIDGenerateDoxygen
 map <SID>SIDGenerateDoxygen :call me#GenerateDoxygenComment()<CR>
 
-"- me#ChangeShellDir
-if !exists(":CDir")
-    command! -nargs=0 CDir call me#ChangeShellDir()
-endif
-
-"- me#CMakeBuild
-if !exists(":CBuild")
-    command! -nargs=0 CBuild call me#CMakeBuild()
-endif
-
-"- me#CppTmp
-if !exists(":CTmp")
-    command! -nargs=0 CTmp call me#CppTmp()
+if !exists(":cdir")
+    command -nargs=0 Cdir call me#ChangeShellDir()
 endif
 
 "}}}
@@ -86,13 +72,6 @@ function! me#Compile()
         execute "source %"
     endif
 endfunction
-
-"## CMake 构建
-function! me#CMakeBuild()
-    py3file ~/vimfiles/pack/MyVim/start/me/plugin/run_qt.py 
-endfunc
-
-
 "}}}
 
 "## delimate {{{
@@ -138,8 +117,8 @@ function! me#ChangeShellDir()
     endwhile
     
     " 改变路径
-    echo curname
-    cd "curname"
+    execute "cd! "..curname[0:j]
+    pwd
 endfunction
 "}}}
 
@@ -414,6 +393,23 @@ function! me#CreateImplement()
 endfunction
 "}}}
 
+"## code snippet {{{
+""" 代码片段
+"""     通过插入横式的快捷键映射，可以使用选择代码片段
+"""     补全，通过已输入的单词进行补全
+func! me#MySnippets()
+    " 读取文件中内容，作为代码片段
+    let mylist = [
+                \ "cout << << endl;", 
+                \ "#include <>", 
+                \ "printf(", 
+                \]
+    
+    call complete(col('.'), mylist)
+    return ''
+endfunc
+"}}}
+
 "## generate define {{{
 """ 将指针的声明改变为定义
 """ 通过定义完行调用
@@ -508,32 +504,14 @@ endfunction
 "}}}
 
 "## C++ code sinppet {{{
-
-""" 代码片段
-"""     通过插入横式的快捷键映射，可以使用选择代码片段
-"""     补全，通过已输入的单词进行补全
-func! me#MySnippets()
-    " 读取文件中内容，作为代码片段
-    let mylist = [
-                \ "cout << << endl;", 
-                \ "#include <>", 
-                \ "printf(", 
-                \]
-    
-    call complete(col('.'), mylist)
-    return ''
-endfunc
-
 """ 新 C++ 文件的模板
 function! me#CppTmp()
-    setlocal foldmethod=syntax
-    let curtime = strftime('%c')
     let cppfile_temp = [
                 \ '/*******************************************************************************', 
-                \ ' * 作者:   林', 
-                \ ' * 始自:   '..curtime,
-                \ ' * 许可证:  ', 
-                \ ' * 描述: ', 
+                \ ' * Author:   lin', 
+                \ ' * Since:    2024/3/11 7:23:18', 
+                \ ' * License:  ', 
+                \ ' * Descript: ', 
                 \ ' ******************************************************************************/', 
                 \ '', 
                 \ '#include <iostream>', 
@@ -542,11 +520,12 @@ function! me#CppTmp()
                 \ '', 
                 \ 'using namespace std;', 
                 \ '', 
-                \ 'int main(int argc, char** argv)', 
+                \ 'int main()', 
                 \ '{', 
                 \ '    ', 
                 \ '    return 0;', 
                 \ '}']
+    
     call append('0', cppfile_temp)
     call cursor(16, 4)
 endfunction
@@ -580,4 +559,3 @@ function! me#SwitchToSource()
     endif
 endfunction
 "}}}
-

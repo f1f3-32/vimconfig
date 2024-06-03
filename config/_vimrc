@@ -70,8 +70,8 @@ let g:DoxygenToolkit_dateTag              = "\\date "
 let g:DoxygenToolkit_versionTag           = "\\version "
 let g:DoxygenToolkit_blockTag             = "\\name "
 let g:DoxygenToolkit_classTag             = "\\class "
-let g:DoxygenToolkit_blockHeader          = "-------------------------------------------------------------------------------- "
-let g:DoxygenToolkit_blockFooter          = "-------------------------------------------------------------------------------- "
+"let g:DoxygenToolkit_blockHeader          = "-------------------------------------------------------------------------------- "
+"let g:DoxygenToolkit_blockFooter          = "-------------------------------------------------------------------------------- "
 let g:DoxygenToolkit_authorName           = "linlin"
 let g:DoxygenToolkit_licenseTag           = "My onw license"
 " }}}
@@ -245,7 +245,8 @@ nnoremap <LEADER>d :call append(line('.'), strftime('%c'))<CR>
 
 "colorscheme zaitabsu
 "colorscheme retrobox
-colorscheme sorbet
+"colorscheme sorbet
+colorscheme retrobox
 
 " gaip=
 "cd $lin/cpp/basic
@@ -418,14 +419,14 @@ endif
 
 "## my plugin {{{
 "--------------------------------------------------------------------------------
-call linlin_popup_menu#AddMenuItem("查看标签行", 'execute :tabs')
-call linlin_popup_menu#AddMenuItem("Goyo", "execute Goyo")
+call linlin_popup_menu#AddMenuItem('t', "查看标签行", 'execute :tabs')
+call linlin_popup_menu#AddMenuItem('g', "Goyo", "execute Goyo")
 "call linlin_popup_menu#AddMenuItem("复制", 'execute normal gv"+y')
 "存在popup窗口不能关闭的问题
-call linlin_popup_menu#AddMenuItem("粘贴", 'execute normal "+p')
-call linlin_popup_menu#AddMenuItem("进入 C++ basic 目录", 'execute cd ~/code/cpp/basic')
-call linlin_popup_menu#AddMenuItem("开启换行", 'execute set wrap')
-call linlin_popup_menu#AddMenuItem("编辑我的插件", 'execute tabnew ~/vimfiles/pack/MyVim/start')
+call linlin_popup_menu#AddMenuItem('p', "粘贴", 'execute normal "+p')
+"call linlin_popup_menu#AddMenuItem('c', "进入 C++ basic 目录", 'execute cd ~/code/cpp/basic')
+call linlin_popup_menu#AddMenuItem('w', "开启换行", 'execute set wrap')
+call linlin_popup_menu#AddMenuItem('x', "编辑我的插件", 'execute tabnew ~/vimfiles/pack/MyVim/start')
 "call linlin_popup_menu#AddMenuItem("打开我的插件目录", 'execute cd ~/code/cpp/basic')
 "查看当前信息：
 "1. pwd
@@ -434,10 +435,11 @@ call linlin_popup_menu#AddMenuItem("编辑我的插件", 'execute tabnew ~/vimfi
 "4. 本次使用持续时间
 
 command -nargs=1 Ifndef call Ifndef()
-call linlin_popup_menu#AddMenuItem("插入预防宏", 'execute call Ifndef()')
-call linlin_popup_menu#AddMenuItem("查看窗口布局", 'execute echo winlayout()')
+call linlin_popup_menu#AddMenuItem("i", "插入预防宏", 'execute call Ifndef()')
+call linlin_popup_menu#AddMenuItem("k", "查看窗口布局", 'execute echo winlayout()')
 
 function! PlaceholderWindow()
+    "wincmd T
     let winid = win_getid()
     vnew
     vertical resize 55
@@ -447,7 +449,7 @@ function! PlaceholderWindow()
     call win_gotoid(winid)
 endfunction
 
-call linlin_popup_menu#AddMenuItem("在左侧添加一个宽度为 60 的窗口", 'execute call PlaceholderWindow()')
+call linlin_popup_menu#AddMenuItem("l", "在左侧添加一个宽度为 60 的窗口", 'execute call PlaceholderWindow()')
 
 "if has('gui_running')
   "set imactivatekey=C-space  
