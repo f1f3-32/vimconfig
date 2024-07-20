@@ -1,51 +1,22 @@
+"# Plug {{{
+
 "## plug-vim{{{
 "--------------------------------------------------------------------------------
 call plug#begin('~/.vim/plugged')
-"Plug 'LoKaltog/powerline', {'rtp':'powerline/bindings/vim/'}
-"Plug 'Valloric/YouCompleteMe'
-"Plug 'Yggdroot/indentLine'
-"Plug 'flazz/vim-colorschemes'
-"Plug 'hjc0720/qssvim'
-"Plug 'jiangmiao/auto-pairs'
-"Plug 'junegunn/vim-peekaboo'
-"Plug 'peterhoeg/vim-qml'
-"Plug 'vim-autoformat/vim-autoformat'
-"Plug 'vim-scripts/DoxygenTooIkit.vim'
-"Plug 'xolox/vim-colorscheme-switcher'
-"Plug 'xolox/vim-misc'
-"vim-surround
-"~/.vim/plugged/vim-surround/README.markdown
-"知道来源：learnvim.irian.to/basic
 Plug 'easymotion/vim-easymotion'
 Plug 'itchyny/lightline.vim'
 Plug 'junegunn/goyo.vim'
 Plug 'junegunn/limelight.vim'
 Plug 'junegunn/vim-easy-align'
 Plug 'luochen1990/rainbow'
-Plug 'neoclide/coc.nvim', {'tag': '*', 'branch': 'release'}
+"Plug 'neoclide/coc.nvim', {'tag': '*', 'branch': 'release'}
 Plug 'preservim/nerdcommenter'
 Plug 'preservim/nerdtree'
 Plug 'preservim/tagbar'
 Plug 'simnalamburt/vim-mundo'
 Plug 'tpope/vim-surround'
-"Plug 'sainnhe/sonokai'
-"Plug 'tribela/vim-transparent'
-"Plug 'bfrg/vim-cpp-modern'
-"Plug 'vim-airline/vim-airline'
-"Plug 'vim-airline/vim-airline-themes'
 Plug 'morhetz/gruvbox'
-"Plug 'xolox/vim-colorscheme-switcher'
 Plug 'vim-scripts/DoxygenToolkit.vim'
-"Plug 'OmniCppComplete'
-"Plug 'luchermitte/lh-cpp'
-"Plug 'honza/vim-snippets'
-"Plug 'godlygeek/csapprox'
-"Plug 'kien/ctrlp.vim'
-"Plug 'yuttie/comfortable-motion.vim'
-"Plug 'vim-scripts/YankRing.vim'
-"Plug 'kshenoy/vim-signature'
-"Plug 'mhinz/vim-startify'
-"Plug 'vim-scripts/bufexplorer.zip'
 call plug#end()
 "}}}
 
@@ -75,7 +46,9 @@ let g:DoxygenToolkit_classTag             = "\\class "
 let g:DoxygenToolkit_authorName           = "linlin"
 let g:DoxygenToolkit_licenseTag           = "My onw license"
 " }}}
+" }}}
 
+"# 对 Vim 自带设置的更改 {{{
 "## option : set {{{
 "--------------------------------------------------------------------------------
 
@@ -89,18 +62,6 @@ let g:DoxygenToolkit_licenseTag           = "My onw license"
 filetype plugin on
 filetype indent on   " 根据文件类型自动缩进
 filetype on
-"hi Normal cterm=none ctermfg=green ctermbg=0
-"hi Normal cterm=none ctermfg=100 ctermbg=0
-"hi Normal cterm=none ctermfg=169 ctermbg=0
-"hi Normal cterm=none ctermfg=208 ctermbg=0
-"hi Normal cterm=none ctermfg=25 ctermbg=0
-"hi Normal ctermfg=252 ctermbg=none
-"hi User2 guifg=Red  guibg=Cyan
-"hi User1 guifg=Blue guibg=DarkRed
-"hi statusline guibg=DarkGrey ctermfg=8 guifg=White ctermbg=15
-"hightlight StatusLine cterm=bold ctermfg=yellow ctermbg=blue
-"hi Normal ctermfg=252 ctermbg=none
-"set runtimepath=~/vimfiles/autoload,~/vimfiles/plugged,$VIMRUNTIME
 "set showtabline=1
 "set guioptions-=T
 "set guioptions-=m
@@ -108,19 +69,8 @@ filetype on
 "set guifont=Courier_New:b:h16
 "set completeopt=menu,menuone,noselect
 "set tags+=D:/Qt/6.5.0/Src/tags
-set tags+=D:/Qt/6.5.0/mingw_64/include/tags
-"set updatetime=300
-"set cmdheight=2
-"set nowritebackup
-"set hidden
-"set encoding=UTF-8
-" set complete+=k
-" set iskeyword+=.,(
-"set iskeyword+=.
-"set tags+=D:\Qt\Tools\mingw1120_64\lib\gcc\x86_64-w64-mingw32\11.2.0\tags
-"set tags=tags;     "在父目录中递归查找 tags 文件
-"set showcmd         " 在右下角显示输入的命令
-"set foldcolumn=5
+set tags+=~/vimfiles/tags/tags
+set tags+=D:/user/code/practice/qt/tdesktop/tags
 "set statusline=[%n]%1*%F%=%0*%2*%l,%c\ %p%%%0*\|ascii=%b,hex=%B%{((&fenc==\"\")?\"\":\"\ \|\ \\".&fenc)}\ \|\ \%{$USER}\ @\ %{hostname()}\    
 "set statusline=[%n]\ %#HIComment%F%=\ \|\ %l,%c\ %p%%\ \|\ ascii=%b,hex=%B%{((&fenc==\"\")?\"\":\"\ \|\ \\".&fenc)}\ \|\ \%{$USER}\ @\ %{hostname()}\     " 没有效果
 "set statusline=[%n]\ %f%m%r%h\ \|\ \ \ \|%=\|\ %l,%c\ %p%%\ \|\ ascii=%b,hex=%b%{((&fenc==\"\")?\"\":\"\ \|\\".&fenc)}\ \|\ \%{$USER}\ @\ %{hostname()}\
@@ -152,7 +102,7 @@ set foldlevel=3
 set foldmethod=marker
 set laststatus=2
 set backspace=3
-set wrap
+set nowrap
 set sidescroll=10       " 自动的滚动文本，当移动的文本没有显示时
 set shiftwidth=4        " 用于自动缩进的空格数量
 set expandtab           " 将制表符 Tab 展开为空格，这对于 Python 尤其有用
@@ -177,6 +127,7 @@ nnoremap <F3> :tabnew<CR>
 "inoremap<F4> <C-O>:popup File<CR>
 nnoremap <F7> :w<CR>
 nnoremap <F6> :call me#Compile()<CR>
+nnoremap <F8> :wa<CR>
 inoremap <F8> <C-R>=ListMonths()<CR>
 
 nnoremap <F8> :w<CR>
@@ -188,7 +139,11 @@ xnoremap ga <Plug>(EasyAlign)
 nnoremap ga <Plug>(EasyAlign)
 vnoremap <Enter> <Plug>(EasyAlign)
 nnoremap gs :call me#SwitchToSource()<CR>
-noremap cx Vy
+
+" 要求保持光标位置不变 # 自定义函数
+"noremap cx Vyp$ 
+noremap cx :call CopyLine()<CR>
+
 nnoremap <Space> <C-d>
 nnoremap <M-w> <C-w>
 nnoremap <LEADER>z ZZ
@@ -244,9 +199,9 @@ nnoremap <LEADER>d :call append(line('.'), strftime('%c'))<CR>
 "powershell -help
 
 "colorscheme zaitabsu
-"colorscheme retrobox
+colorscheme elflord
 "colorscheme sorbet
-colorscheme retrobox
+"colorscheme default
 
 " gaip=
 "cd $lin/cpp/basic
@@ -262,27 +217,13 @@ colorscheme retrobox
 
 "## autocmd : au {{{
 "--------------------------------------------------------------------------------
-"autocmd! BufNewFile *.cpp call me#CppTmp()
 au! BufNewFile *.cpp,*.h,*.hpp setlocal foldmethod=syntax
 au! BufRead *.cpp,*.h,*.hpp setlocal foldmethod=syntax
-
-            
-"autocmd InsertLeave  * :set imi=1
-"autocmd InsertEnter * :set imi=2
-"autocmd event filetype command
-"autocmd BufNewFile *.cpp || *.hpp call InsertCppHeadInfo()
-"autocmd VimEnter *.md  TagbarToggle
-"autocmd BufWritePost *.c *.h silent! !ctags -R &  "保存c文件时重新生成标签
-"au InsertLeave * hi statusline guibg=DarkGrey ctermfg=8 guifg=White ctermbg=15
-"au InsertEnter * call InsertStatuslineColor(v:insertmode)
+au! BufRead *.ixx set filetype=cpp
 " }}} autocmd
 
 "## variable : let {{{
 "--------------------------------------------------------------------------------
-"let g:lightline.colorscheme = 'wombat'
-"let g:compilerun_wind_id = 0
-"let filename = expand('%')
-
 let mapleader = "\\"
 let g:limelight_priority = -1
 let g:limelight_eop = '\ze\n^\s'
@@ -293,64 +234,16 @@ let g:limelight_conceal_guifg = '#777777'
 let g:limelight_conceal_guifg = 'DarkGray'
 let g:limelight_conceal_ctermfg = 240
 let g:limelight_conceal_ctermfg = 'gray'
-let $mycfg="~/.vim/pack/MyVim/start"
+if has('win32')
+    let $mycfg="~/vimfiles/pack/MyVim/start"
+    let $mytmp="~/vimfiles/tmp"
+    let $myinclude="D:\\user\\code\\libraries\\include"
+else
+    let $mycfg="~/.vim/pack/MyVim/start"
+    let $mytmp="~/.vim/tmp"
+endif
 let g:rainbow_active=1
 "}}} variable
-
-"## function : func {{{
-"--------------------------------------------------------------------------------
-""" C++ 插入预防宏
-function! Ifndef()
-    let name = input("请输入宏名：")
-    if empty(name) == 1
-        return
-    endif
-        let macro_name = toupper(name) .. "_H_"
-        let content = [
-                    \ "##ifndef " .. macro_name, 
-                    \ "##define " .. macro_name, 
-                    \]
-        call append(line("0"), content)
-        call append(line("$"), "##endif // " .. macro_name)
-endfunction
-
-""" 查看中文月份
-func! ListMonths()
-    "call complete(col('.'), ['January', 'February', 'March',
-                "\ 'April', 'May', 'June', 'July', 'August', 'September',
-                "\ 'October', 'November', 'December'])
-    let cpp_complete = [
-                \ "std::cout << << std::endl;", 
-                \ "int main() { f(); }", 
-                \]
-    call complete(col('.'), cpp_complete)
-    "实现光标的移动，在补全使用特殊的参数，在选择后，解析结果，然后移动光标
-    return ''
-endfunc
-" 此函数用于消除文本替换后的空格
-"func Eatchar(pat)
-"    let c = nr2char(getchar(0))
-"    return (c =~ a:pat) ? '' : c
-"endfunc
-
-" Deprecation: see $mypack\MyVim\start\me\me.vim
-"function! CompileRun()
-    "let cppfile_winid = win_getid()
-    "execute "write"
-    "let curfilename = expand("%")
-    "echo g:compilerun_wind_id
-    "if !g:compilerun_wind_id
-        "execute "new " .. "Compile Run"
-        "echo "已创建新的结果缓冲！"
-        ""execute "vertical resize 50"
-        "let g:compilerun_wind_id = bufwinid("Compile Run")
-    "endif
-    "call win_gotoid(g:compilerun_wind_id)
-    "execute "normal ggVGx"
-    "execute "r!g++ " .. l:curfilename .. " -std=c++20 && a.exe"
-    "call win_gotoid(l:cppfile_winid)
-"endfunction
-"}}} function
 
 "## filetype : cpp {{{
 "--------------------------------------------------------------------------------
@@ -359,31 +252,16 @@ endfunc
 "## menu {{{
 " --------------------------------------------------------------------------------
 " insert mode menu
-" inoremenu File.&Save :w<CR>
-
-" normal mode menu
-" menu File.&Save :w<CR>
-           
-"amenu File.Save <C-O>:w<CR>
-"amenu File.Exit <C-O>:q<CR>
-"imenu File.Big\ Changes.Delete\ All\ Spaces :%s/[ ^I]//g<CR> "插入模式不能使用
-
-"" tool bar
-
-" run program
-"amenu ToolBar.BuiltIn21 :call me#Compile()<CR>
 amenu ToolBar.BuiltIn21 :call me#Compile()<CR>
 amenu ToolBar.BuiltIn22 :!start subl.exe %<CR>
 " }}} menu
 
 "## abbreviations {{{
 " --------------------------------------------------------------------------------
-
 iab ce std::cout <<  << std::endl;<Left><Left><Left><Left><Left><Left><Left><Left><Left><Left><Left><Left><Left><Left><Left> 
 iab ff for(int i = 0; i < n; ++i)<CR>{<CR><SPACE><SPACE><SPACE><SPACE>
 iab rr std::random_device rd;<CR>std::uniform_int_distribution dist(0, 10);
  
-"iabbr <silent> ,, -><C-R>=Eatchar('\s')<CR>
 "}}} abbr
 
 "## python {{{
@@ -416,6 +294,23 @@ endif
 "----------------------------------------
 "Goyo与Limelight聚和
 "}}}
+" }}}
+
+"# 自定义的设置、函数 {{{
+
+"## 重复行而保持光标位置不变 {{{
+function! CopyLine()
+    let l:old_cursor = getcursorcharpos()
+    execute "normal vYp"
+    call setcursorcharpos(l:old_cursor[1]+1, l:old_cursor[2])
+endfunction
+"}}}
+
+"## 补全 complete {{{
+"thesaurus 辞典补全，将一个指定的文件作为数据来源
+set dict+=~\\vimfiles\\complete\\cpp-keyword.txt
+set dict+=~\\vimfiles\complete\\cpp-std-header.txt
+"}}}
 
 "## my plugin {{{
 "--------------------------------------------------------------------------------
@@ -438,6 +333,7 @@ command -nargs=1 Ifndef call Ifndef()
 call linlin_popup_menu#AddMenuItem("i", "插入预防宏", 'execute call Ifndef()')
 call linlin_popup_menu#AddMenuItem("k", "查看窗口布局", 'execute echo winlayout()')
 
+"### 使窗口位于中间，并打开顶部打开一个预览窗口
 function! PlaceholderWindow()
     "wincmd T
     let winid = win_getid()
@@ -451,6 +347,12 @@ endfunction
 
 call linlin_popup_menu#AddMenuItem("l", "在左侧添加一个宽度为 60 的窗口", 'execute call PlaceholderWindow()')
 
+function! SaveToRegister()
+
+endfunction
+
+
+
 "if has('gui_running')
   "set imactivatekey=C-space  
   "inoremap <ESC> <ESC>:set iminsert=2<CR>
@@ -459,7 +361,44 @@ call linlin_popup_menu#AddMenuItem("l", "在左侧添加一个宽度为 60 的�
 "~/vimfiles/pack/MyVim/start
 "~/vimfiles/pack/MyVim/record.md
 
+""" C++ 插入预防宏
+function! Ifndef()
+    let name = input("请输入宏名：")
+    if empty(name) == 1
+        return
+    endif
+        let macro_name = toupper(name) .. "_H_"
+        let content = [
+                    \ "#ifndef " .. macro_name, 
+                    \ "#define " .. macro_name, 
+                    \]
+        call append(line("0"), content)
+        call append(line("$"), "#endif // " .. macro_name)
+endfunction
+
+""" 查看中文月份
+func! ListMonths()
+    "call complete(col('.'), ['January', 'February', 'March',
+                "\ 'April', 'May', 'June', 'July', 'August', 'September',
+                "\ 'October', 'November', 'December'])
+    let cpp_complete = [
+                \ "std::cout << << std::endl;", 
+                \ "int main() { f(); }", 
+                \]
+    call complete(col('.'), cpp_complete)
+    "实现光标的移动，在补全使用特殊的参数，在选择后，解析结果，然后移动光标
+    return ''
+endfunc
 "}}} plugin
+
+"## Register Record {{{
+
+" 在 vimfiles 中创建目录 register,
+" 在这个目录中保存寄存器中的信息——给文件命名加注释。
+" 需要使用时，直接加载保存的文件。
+
+"j0wvf;hyPa << 
+"}}}
 
 "## Self Custom Symbol {{{
 "--------------------------------------------------------------------------------
@@ -468,6 +407,17 @@ call linlin_popup_menu#AddMenuItem("l", "在左侧添加一个宽度为 60 的�
 "└─────────────┘
 
     "/zbf": [ "┌─────────────┐", "│             │", "├─────────────┤", "└─────────────┘", "┌", "┬", "┐", "┌", "─", "┐", "┍", "┯", "┑", "╔", "╦", "╗", "├", "┼", "┤", "│", "┼", "│", "┝", "┿", "┥", "╠", "╬", "╣", "└", "┴", "┘", "└", "─", "┘", "┕", "┷", "┙", "╚", "╩", "╝", "┏", "┳", "┓", "┏", "━", "┓", "┎", "┰", "┒", "╔", "═", "╗", "┣", "╋", "┫", "┃", "╋", "┃", "┠", "╂", "┨", "║", "╬", "║", "┗", "┻", "┛", "┗", "━", "┛", "┖", "┸", "┚", "╚", "═", "╝", "╓", "╥", "╖", "╒", "╤", "╕", "┏", "┱", "┐", "┌", "┲", "┓", "╟", "╫", "╢", "╞", "╪", "╡", "┡", "╃", "┤", "├", "╄", "┩", "╙", "╨", "╜", "╘", "╧", "╛", "└", "┴", "┘", "└", "┴", "┘", "┌", "┬", "┐", "┏", "┳", "┓", "╭", "─", "╮", "╱", "─", "╲", "┟", "╁", "┧", "┞", "╀", "┦", "│", "╳", "│", "│", "┼", "│", "┗", "┻", "┛", "└", "┴", "┘", "╰", "─", "╯", "╲", "─", "╱", "┄", "┈", "┉", "┅", "┇", "┋", "┊", "┆" ] 
+"}}}
+
+"## Changed dir {{{
+
+""" \brief 将 vim 的命令行目录改变为调用这个函数的文件所在的目录
+function ChangedDir()
+    let l:file_dir = expand("#:h")
+    call chdir(l:file_dir)
+endfunction
+
+command -nargs=0 CD call Ifndef()
 "}}}
 
 "## note {{{
@@ -507,4 +457,9 @@ call linlin_popup_menu#AddMenuItem("l", "在左侧添加一个宽度为 60 的�
 "- strptime
 "    - 将指定格的字符串时间转换为 Unix 时间戳
 
+"### { { { } } }
+"这是 vim 的折叠标记
+
 "}}} note
+
+" }}}

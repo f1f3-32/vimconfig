@@ -1,5 +1,7 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhistcnt =6
+let g:netrw_dirhistcnt =8
+let g:netrw_dirhist_8='D:\user\code\suixin\example'
+let g:netrw_dirhist_7='C:\Users\16207\vimfiles\pack\MyVim\start\me\plugin'
 let g:netrw_dirhist_6='D:\user\code\practice\qt\SmallPillsOfQt\CustomWindow'
 let g:netrw_dirhist_5='D:\user\code\practice\vim\vim-config'
 let g:netrw_dirhist_4='D:/user/code/practice/vim/vim-config'
@@ -8,5 +10,3 @@ let g:netrw_dirhist_2='D:\user\code\practice\vim\vim-config'
 let g:netrw_dirhist_1='D:\user\code\practice\cpp\basic\rapidcsv'
 let g:netrw_dirhist_0='D:\user\code\practice\qt\widgets\toExcel'
 let g:netrw_dirhist_9='D:\user\code\libraries\include\lin'
-let g:netrw_dirhist_8='C:/Users/16207/suixin/src'
-let g:netrw_dirhist_7='C:\Users\16207\suixin'

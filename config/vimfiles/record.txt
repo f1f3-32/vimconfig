@@ -1,0 +1,8 @@
+## tags
+
+用于存放 ctags 生成的 tags 文件
+
+## complete
+
+自定义的补全文本放置的位置
+

@@ -1,6 +1,15 @@
 "## map plugin cmd {{{
 ""--------------------------------------------------------------------------------
-"" 映射命令 
+
+"## 防止重复加载 {{{
+if exists("g:loaded_me")
+    finish
+endif
+
+let loaded_me = 1
+"}}}
+
+"### 映射快捷键 
 """ hasmapto 防止重复映射
 
 "没有什么用，还不如直接在 vimrc 中进行映射
@@ -11,13 +20,15 @@
 "map <Plug>MeCompileRun <SID>CompileRun
 "map <SID>CompileRun :call me#Compile()<CR>          
 
-if !hasmapto('<Plug>MeDivider')
-    map <Leader>a <Plug>MeDivider
+"- me#Delimate
+if !hasmapto('<Plug>MeDelimate')
+    map <Leader>a <Plug>MeDelimate
 endif
 
-map <Plug>MeDivider <SID>SIDDivider
-map <SID>SIDDivider :call me#Divider()<CR>
+map <Plug>MeDelimate <SID>SIDDelimate
+map <SID>SIDDelimate :call me#Delimate()<CR>
 
+"- me#CreateImplement
 if !hasmapto('<Plug>MeImpl')
     map <Leader>d <Plug>MeImpl
 endif
@@ -25,7 +36,7 @@ endif
 map <Plug>MeImpl <SID>Implement
 map <SID>Implement :call me#CreateImplement()<CR>
 
-
+"- me#GenerateDoxygenComment
 if !hasmapto('<Plug>CreateClass')
     map <Leader>c <Plug>GenerateDoxygen
 endif
@@ -33,8 +44,19 @@ endif
 map <Plug>GenerateDoxygen <SID>SIDGenerateDoxygen
 map <SID>SIDGenerateDoxygen :call me#GenerateDoxygenComment()<CR>
 
-if !exists(":cdir")
-    command -nargs=0 Cdir call me#ChangeShellDir()
+"- me#ChangeShellDir
+if !exists(":CDir")
+    command! -nargs=0 CDir call me#ChangeShellDir()
+endif
+
+"- me#CMakeBuild
+if !exists(":CBuild")
+    command! -nargs=0 CBuild call me#CMakeBuild()
+endif
+
+"- me#CppTmp
+if !exists(":CTmp")
+    command! -nargs=0 CTmp call me#CppTmp()
 endif
 
 "}}}
@@ -72,12 +94,19 @@ function! me#Compile()
         execute "source %"
     endif
 endfunction
+
+"## CMake 构建
+function! me#CMakeBuild()
+    py3file ~/vimfiles/pack/MyVim/start/me/plugin/run_qt.py 
+endfunc
+
+
 "}}}
 
 "## delimate {{{
 """ 给文件添加一个分隔线
 """     可以根据文件类型进行注释,但自动在下一行添加注释的功能会造成影响
-function! me#Divider()
+function! me#Delimate()
     let filename  = split(expand('%'), '/')
     if &filetype == 'c'|| &filetype == 'cpp' || &filetype == 'java'
         execute "normal o\<Esc>80a-\<Esc>"
@@ -98,31 +127,12 @@ endfunction
 """     依据当前打开文件的路径，将 vim 的路径改为相应的路径
 """ TODO: 功能待完成
 function! me#ChangeShellDir()
-    " 获取当前文件名
-    let curname=expand("%")
-    " 获取路径长度
-    let chang=0
-    for i in curname
-        let chang += 1
-    endfor
-
-    " 获取最后一个分隔符 /
-    let i=0
-    let j=0
-    while i < chang 
-        if curname[i] == "/"
-            let j=i
-        endif 
-        let i += 1
-    endwhile
-    
-    " 改变路径
-    execute "cd! "..curname[0:j]
-    pwd
+    let file_dir = expand("#:h")
+    call chdir(file_dir)
 endfunction
 "}}}
 
-"## extra {{{
+"# extra {{{
 """提取操作
 function! s:extraImplement(decl_line, class_name)
     " decl line
@@ -393,23 +403,6 @@ function! me#CreateImplement()
 endfunction
 "}}}
 
-"## code snippet {{{
-""" 代码片段
-"""     通过插入横式的快捷键映射，可以使用选择代码片段
-"""     补全，通过已输入的单词进行补全
-func! me#MySnippets()
-    " 读取文件中内容，作为代码片段
-    let mylist = [
-                \ "cout << << endl;", 
-                \ "#include <>", 
-                \ "printf(", 
-                \]
-    
-    call complete(col('.'), mylist)
-    return ''
-endfunc
-"}}}
-
 "## generate define {{{
 """ 将指针的声明改变为定义
 """ 通过定义完行调用
@@ -504,14 +497,32 @@ endfunction
 "}}}
 
 "## C++ code sinppet {{{
+
+""" 代码片段
+"""     通过插入横式的快捷键映射，可以使用选择代码片段
+"""     补全，通过已输入的单词进行补全
+func! me#MySnippets()
+    " 读取文件中内容，作为代码片段
+    let mylist = [
+                \ "cout << << endl;", 
+                \ "#include <>", 
+                \ "printf(", 
+                \]
+    
+    call complete(col('.'), mylist)
+    return ''
+endfunc
+
 """ 新 C++ 文件的模板
 function! me#CppTmp()
+    setlocal foldmethod=syntax
+    let curtime = strftime('%c')
     let cppfile_temp = [
                 \ '/*******************************************************************************', 
-                \ ' * Author:   lin', 
-                \ ' * Since:    2024/3/11 7:23:18', 
-                \ ' * License:  ', 
-                \ ' * Descript: ', 
+                \ ' * 作者:   林', 
+                \ ' * 始自:   '..curtime,
+                \ ' * 许可证:  ', 
+                \ ' * 描述: ', 
                 \ ' ******************************************************************************/', 
                 \ '', 
                 \ '#include <iostream>', 
@@ -520,12 +531,11 @@ function! me#CppTmp()
                 \ '', 
                 \ 'using namespace std;', 
                 \ '', 
-                \ 'int main()', 
+                \ 'int main(int argc, char** argv)', 
                 \ '{', 
                 \ '    ', 
                 \ '    return 0;', 
                 \ '}']
-    
     call append('0', cppfile_temp)
     call cursor(16, 4)
 endfunction
@@ -559,3 +569,4 @@ function! me#SwitchToSource()
     endif
 endfunction
 "}}}
+
