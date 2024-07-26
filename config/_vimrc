@@ -17,6 +17,20 @@ Plug 'simnalamburt/vim-mundo'
 Plug 'tpope/vim-surround'
 Plug 'morhetz/gruvbox'
 Plug 'vim-scripts/DoxygenToolkit.vim'
+Plug 'scrooloose/syntastic'
+Plug 'tpope/vim-fugitive'
+Plug 'kien/ctrlp.vim'
+Plug 'honza/vim-snippets'
+"Plug 'hrsh7th/vim-vsnip'
+Plug 'SirVer/ultisnips'
+Plug 'shougo/vimproc.vim'
+Plug 'elzr/vim-json'
+Plug 'tomtom/tlib_vim'
+Plug 'thaerkh/vim-workspace'
+Plug 'kana/vim-textobj-user'
+Plug 'tpope/vim-vinegar'
+Plug 'bling/vim-bufferline'
+
 call plug#end()
 "}}}
 
@@ -46,6 +60,14 @@ let g:DoxygenToolkit_classTag             = "\\class "
 let g:DoxygenToolkit_authorName           = "linlin"
 let g:DoxygenToolkit_licenseTag           = "My onw license"
 " }}}
+
+"### workspace {{{
+"let g:workspace_autocreate = 1
+"let g:workspace_session_name = 'Session.vim'
+"let g:workspace_persist_undo_history = 1
+
+"}}}
+
 " }}}
 
 "# 对 Vim 自带设置的更改 {{{
@@ -87,9 +109,9 @@ set tags+=D:/user/code/practice/qt/tdesktop/tags
         "setlocal bufhidden=hide
         "setlocal buftype=nofile
         "setlocal noreadonly
-set runtimepath+="D:\\Programs\\Python\\Python311\python311.dll"
-set guifont=AnonymicePro_Nerd_Font_Mono:h16
-set dictionary+=$linp/vim/dict/c.txt
+set runtimepath+="D:\\Users\\Programs\\Python\\Python38\\python38.dll"
+set pythonthreedll=D:\\Users\\Programs\\Python\\Python38\\python38.dll 
+"set guifont=AnonymicePro_Nerd_Font_Mono:h16
 set noswapfile
 set nobackup
 set noundofile
@@ -173,8 +195,8 @@ map <Leader> <Plug>(easymotion-prefix)
 "inoremap <C-]> <C-X><C-]>
 nnoremap <c-j> <Plug>(easymotion-w)
 nnoremap <c-k> <Plug>(easymotion-b)
-nnoremap <c-;> <Plug>(easymotion-bd-f)
-inoremap <c-;> <Esc><Plug>(easymotion-bd-f)
+"nnoremap <c-;> <Plug>(easymotion-bd-f)
+"inoremap <c-;> <Esc><Plug>(easymotion-bd-f)
 inoremap <c-q> <Esc>:
 inoremap <silent><expr> <Tab> coc#pum#confirm()
 "inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
@@ -234,27 +256,12 @@ let g:limelight_conceal_guifg = '#777777'
 let g:limelight_conceal_guifg = 'DarkGray'
 let g:limelight_conceal_ctermfg = 240
 let g:limelight_conceal_ctermfg = 'gray'
-if has('win32')
-    let $mycfg="~/vimfiles/pack/MyVim/start"
-    let $mytmp="~/vimfiles/tmp"
-    let $myinclude="D:\\user\\code\\libraries\\include"
-else
-    let $mycfg="~/.vim/pack/MyVim/start"
-    let $mytmp="~/.vim/tmp"
-endif
 let g:rainbow_active=1
 "}}} variable
 
 "## filetype : cpp {{{
 "--------------------------------------------------------------------------------
 "}}}
-
-"## menu {{{
-" --------------------------------------------------------------------------------
-" insert mode menu
-amenu ToolBar.BuiltIn21 :call me#Compile()<CR>
-amenu ToolBar.BuiltIn22 :!start subl.exe %<CR>
-" }}} menu
 
 "## abbreviations {{{
 " --------------------------------------------------------------------------------
@@ -308,8 +315,10 @@ endfunction
 
 "## 补全 complete {{{
 "thesaurus 辞典补全，将一个指定的文件作为数据来源
+set dictionary+=$linp/vim/dict/c.txt
 set dict+=~\\vimfiles\\complete\\cpp-keyword.txt
 set dict+=~\\vimfiles\complete\\cpp-std-header.txt
+set dict+=~\\vimfiles\complete\\frq.txt
 "}}}
 
 "## my plugin {{{
@@ -351,10 +360,8 @@ function! SaveToRegister()
 
 endfunction
 
-
-
 "if has('gui_running')
-  "set imactivatekey=C-space  
+  "set imactivatekey=C-space
   "inoremap <ESC> <ESC>:set iminsert=2<CR>
 "endif
 
@@ -369,8 +376,8 @@ function! Ifndef()
     endif
         let macro_name = toupper(name) .. "_H_"
         let content = [
-                    \ "#ifndef " .. macro_name, 
-                    \ "#define " .. macro_name, 
+                    \ "#ifndef " .. macro_name,
+                    \ "#define " .. macro_name,
                     \]
         call append(line("0"), content)
         call append(line("$"), "#endif // " .. macro_name)
@@ -382,8 +389,8 @@ func! ListMonths()
                 "\ 'April', 'May', 'June', 'July', 'August', 'September',
                 "\ 'October', 'November', 'December'])
     let cpp_complete = [
-                \ "std::cout << << std::endl;", 
-                \ "int main() { f(); }", 
+                \ "std::cout << << std::endl;",
+                \ "int main() { f(); }",
                 \]
     call complete(col('.'), cpp_complete)
     "实现光标的移动，在补全使用特殊的参数，在选择后，解析结果，然后移动光标
@@ -397,16 +404,16 @@ endfunc
 " 在这个目录中保存寄存器中的信息——给文件命名加注释。
 " 需要使用时，直接加载保存的文件。
 
-"j0wvf;hyPa << 
+"j0wvf;hyPa <<
 "}}}
 
 "## Self Custom Symbol {{{
 "--------------------------------------------------------------------------------
 "┌─────────────┐
-"│             │  
+"│             │
 "└─────────────┘
 
-    "/zbf": [ "┌─────────────┐", "│             │", "├─────────────┤", "└─────────────┘", "┌", "┬", "┐", "┌", "─", "┐", "┍", "┯", "┑", "╔", "╦", "╗", "├", "┼", "┤", "│", "┼", "│", "┝", "┿", "┥", "╠", "╬", "╣", "└", "┴", "┘", "└", "─", "┘", "┕", "┷", "┙", "╚", "╩", "╝", "┏", "┳", "┓", "┏", "━", "┓", "┎", "┰", "┒", "╔", "═", "╗", "┣", "╋", "┫", "┃", "╋", "┃", "┠", "╂", "┨", "║", "╬", "║", "┗", "┻", "┛", "┗", "━", "┛", "┖", "┸", "┚", "╚", "═", "╝", "╓", "╥", "╖", "╒", "╤", "╕", "┏", "┱", "┐", "┌", "┲", "┓", "╟", "╫", "╢", "╞", "╪", "╡", "┡", "╃", "┤", "├", "╄", "┩", "╙", "╨", "╜", "╘", "╧", "╛", "└", "┴", "┘", "└", "┴", "┘", "┌", "┬", "┐", "┏", "┳", "┓", "╭", "─", "╮", "╱", "─", "╲", "┟", "╁", "┧", "┞", "╀", "┦", "│", "╳", "│", "│", "┼", "│", "┗", "┻", "┛", "└", "┴", "┘", "╰", "─", "╯", "╲", "─", "╱", "┄", "┈", "┉", "┅", "┇", "┋", "┊", "┆" ] 
+    "/zbf": [ "┌─────────────┐", "│             │", "├─────────────┤", "└─────────────┘", "┌", "┬", "┐", "┌", "─", "┐", "┍", "┯", "┑", "╔", "╦", "╗", "├", "┼", "┤", "│", "┼", "│", "┝", "┿", "┥", "╠", "╬", "╣", "└", "┴", "┘", "└", "─", "┘", "┕", "┷", "┙", "╚", "╩", "╝", "┏", "┳", "┓", "┏", "━", "┓", "┎", "┰", "┒", "╔", "═", "╗", "┣", "╋", "┫", "┃", "╋", "┃", "┠", "╂", "┨", "║", "╬", "║", "┗", "┻", "┛", "┗", "━", "┛", "┖", "┸", "┚", "╚", "═", "╝", "╓", "╥", "╖", "╒", "╤", "╕", "┏", "┱", "┐", "┌", "┲", "┓", "╟", "╫", "╢", "╞", "╪", "╡", "┡", "╃", "┤", "├", "╄", "┩", "╙", "╨", "╜", "╘", "╧", "╛", "└", "┴", "┘", "└", "┴", "┘", "┌", "┬", "┐", "┏", "┳", "┓", "╭", "─", "╮", "╱", "─", "╲", "┟", "╁", "┧", "┞", "╀", "┦", "│", "╳", "│", "│", "┼", "│", "┗", "┻", "┛", "└", "┴", "┘", "╰", "─", "╯", "╲", "─", "╱", "┄", "┈", "┉", "┅", "┇", "┋", "┊", "┆" ]
 "}}}
 
 "## Changed dir {{{
@@ -462,4 +469,38 @@ command -nargs=0 CD call Ifndef()
 
 "}}} note
 
+"## 包含网址的一行，变为 markdown 超链接格式 {{{
+function! MDLink()
+    execute "normal I[](\<Esc>A)\<Esc>0a"
+endfunction
+
+command -nargs=0 MDLink call MDLink()
+"}}}
+
+"## my variable {{{
+if has('win32')
+    let $mycfg="~/vimfiles/pack/MyVim/start"
+    let $mytmp="~/vimfiles/tmp"
+    let $myinclude="D:\\user\\code\\libraries\\include"
+    let $myhome="D\\user\\code"
+else
+    let $mycfg="~/.vim/pack/MyVim/start"
+    let $mytmp="~/.vim/tmp"
+endif
+
+"}}}
+
+"## menu {{{
+" --------------------------------------------------------------------------------
+" 在 vim 中，菜单是一个很强大的功能，但是需要自定义
+" insert mode menu
+"amenu ToolBar.BuiltIn21 :call me#Compile()<CR>
+"amenu ToolBar.BuiltIn22 :!start subl.exe %<CR>
+
+" ### term_start
+"term_start({cmd} [, {options}])			*term_start()*
+":call term_start(['sh', '-c', 'echo hello'])
+
+"### pop_menu
+" }}} menu
 " }}}

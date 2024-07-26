@@ -1,5 +1,10 @@
 test
 config/vimfiles/plugged/
 config/vimfiles/pack/vendor/
+config/vimfiles/pack/plugin/
+config/vimfiles/colors
+config/vimfiles/.netrwhist~
+config/vimfiles/abc.txt
+
 
 

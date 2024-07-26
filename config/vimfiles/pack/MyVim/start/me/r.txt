@@ -1,0 +1,73 @@
+# vim 插件的编写
+
+## 插件存放位置
+
+`$HOME/vimfiles/pack/plugins/start`
+
+这个目录下的插件会在 vim 启动时自动加载
+
+## 插件目录结构
+
+``` vim
+Your directory layout would be like this:
+   start/foobar/plugin/foo.vim		" always loaded, defines commands
+   start/foobar/plugin/bar.vim		" always loaded, defines commands
+   start/foobar/autoload/foo.vim	" loaded when foo command used
+   start/foobar/doc/foo.txt		" help for foo.vim
+   start/foobar/doc/tags		" help tags
+   opt/fooextra/plugin/extra.vim	" optional plugin, defines commands
+   opt/fooextra/autoload/extra.vim	" loaded when extra command used
+   opt/fooextra/doc/extra.txt		" help for extra.vim
+   opt/fooextra/doc/tags		" help tags    
+```
+
+## 测试
+
+### 测试插件的存放位置
+
+``` vim
+:help script        这里查看插件如何编写
+:help usr_51        这里查看如何写插件
+:help 05.6          这里查看插件的存放位置
+```
+
+结果是成功的！
+
+1. 创建一个函数，在 vim 中调用，显示：MY-CPP PLUGIN TEST 1
+2. 访问插件中的变量
+    
+### 测试在插件中使用 leader 映射
+
+### 测试多个插件的编写
+
+## 资料
+
+``` 
+1. :help repeat.txt | Using a package and loading automatically |
+包的路径在哪儿
+2. :help repeat.txt | 6. Create Vim packages    | 如何创建一个包
+3. :help userfunc.txt | Using an autoload script | 如何写一个函数
+4. :help user_41.txt | write-plugin-quickload
+```
+
+## TODO
+
+CANCEL DONE DEADLINE 2023-12-1
+
+想写一个待办列表的工具，怎么写了？使用 Qt 吧！
+
+创建自己的菜单和工具栏
+
+## 菜单插件
+
+编译运行当前文件
+
+## vimfiles\pack\MyVim\start\me
+
+me\plugin\me.vim 中的 me#funcname 可以被调用
+me\plugin\testvim.vim 中的 testvim#funcname 可以被调用
+
+
+
+
+
