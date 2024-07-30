@@ -1,8 +1,16 @@
 @echo off
 REM 配置
 
+SET /P isOk="是否要覆盖已存在的 vimrc ?（y/n )"
+
+if /I "%isOk%" == "y" call copy_vimrc
+
+goto :eof
+
+:copy_vimrc
 set batch_dir=%~dp0
 set batch_disk=%~d0
+
 
 C:
 cd %USERPROFILE%
@@ -26,4 +34,4 @@ if exist _vimrc (
 
 %batch_disk%
 cd %batch_dir%
-
+goto eof
