@@ -169,6 +169,8 @@ filetype on
 "set showtabline=1
 "set guioptions-=T
 "set guioptions-=m
+"tabpage
+set guioptions-=e
 "set guifont=Lucida_Console:h18
 "set guifont=Courier_New:b:h16
 "set completeopt=menu,menuone,noselect
@@ -613,6 +615,14 @@ amenu ToolBar.cmakerun :call CMakeBuild()<CR>
 tmenu icon=~/vimfiles/bitmaps/sublime.bmp ToolBar.subl Use sublime open under the cursor of file.
 amenu icon=~/vimfiles/bitmaps/sublime.bmp ToolBar.subl :!start subl %<CR>
 
+tmenu icon=~/vimfiles/bitmaps/cmd.bmp ToolBar.runcmd Open standardalong cmd window.
+amenu ToolBar.runcmd :!start cmd<CR>
+
+tmenu icon=~/vimfiles/bitmaps/vim.bmp ToolBar.runvim Open standardalong vim window.
+amenu ToolBar.runvim :!start gvim<CR>
+
+tmenu icon=~/vimfiles/bitmaps/explorer.bmp ToolBar.explorer Open file explorer.
+amenu ToolBar.explorer :!start explorer .<CR>
 "2024-07-30 00:23
 "使用 Gimp 制作 bmp 图片，用于工具栏的图标
 "导出的图像大小：36x36
@@ -641,11 +651,18 @@ amenu &Lin.CMake\ &Run :call CMakeRun()<CR>
 
 "## 基于 cmake 构建、运行程序{{{
 function! CMakeBuild()
+    execute "normal :tabnew<CR>"
     call term_start('cmake -Bbuild')
 endfunction
 
 function! CMakeRun()
+    execute "normal :tabnew<CR>"
     call term_start('python C:\\Users\\16207\\vimfiles\\tmp\\run_qt.py')
+    "call term_start(["cmd", "/k", "chch 65001", "&", "python C:\\Users\\16207\\vimfiles\\tmp\\run_qt.py"]) 
+endfunction
+
+function! VSOpen()
+"C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\devenv.exe"
 endfunction
 "}}}
 
