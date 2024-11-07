@@ -35,7 +35,7 @@ def find_prj_name():
 
     file.close()
     try:
-        pattern = re.compile(r'project\("?\w*-?\w*"?\s')
+        pattern = re.compile(r'project\("?\w*-?_?\w*"?\s')
     except NoneType:
         print("构建失败！\n \
                当前位置：CMakeLists.txt \n \
@@ -75,7 +75,7 @@ def run_qt():
 
     print("run_qt.py", os.getcwd())
     cmake_generate = "cmake .."
-    cmake_build = "cmake --build ."
+    cmake_build = "chcp 65001 && cmake --build ."
     project_name = find_prj_name()
     cmakelists = os.path.exists("CMakeLists.txt")
     build_dir = os.path.exists("build")

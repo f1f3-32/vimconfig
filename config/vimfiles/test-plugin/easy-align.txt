@@ -1,0 +1,54 @@
+easy-align-adjusting-indentation
+origin:
+     apple =  1
+    banana +=  apple
+      cake ||= banana
+shadow:
+    apple    = 1
+    banana  += apple
+    cake   ||= banana
+deep:
+      apple    = 1
+      banana  += apple
+      cake   ||= banana
+none:
+apple    = 1
+banana  += apple
+cake   ||= banana
+
+
+easy-align-alignments-over-multiple-occurrences-of-delimiters
+origin:
+    std::cout << "root_name = " << p.root_name() << std::endl;
+    std::cout << "root_directory = " << p.root_directory() << std::endl;
+    std::cout << "relative_path = " << p.relative_path() << std::endl;
+    std::cout << "parent_path = " << p.parent_path() << std::endl;
+    std::cout << "filename = " << p.filename() << std::endl;
+    std::cout << "stem = " << p.stem() << std::endl;
+    std::cout << "extension = " << p.extension() << std::endl;
+
+rcl
+    std::cout <<   "root_name = "    << p.root_name()      << std::endl;
+    std::cout << "root_directory = " << p.root_directory() << std::endl;
+    std::cout << "relative_path = "  << p.relative_path()  << std::endl;
+    std::cout <<  "parent_path = "   << p.parent_path()    << std::endl;
+    std::cout <<    "filename = "    << p.filename()       << std::endl;
+    std::cout <<      "stem = "      << p.stem()           << std::endl;
+    std::cout <<   "extension = "    << p.extension()      << std::endl;
+
+lll
+    std::cout << "root_name = "      << p.root_name()      << std::endl;
+    std::cout << "root_directory = " << p.root_directory() << std::endl;
+    std::cout << "relative_path = "  << p.relative_path()  << std::endl;
+    std::cout << "parent_path = "    << p.parent_path()    << std::endl;
+    std::cout << "filename = "       << p.filename()       << std::endl;
+    std::cout << "stem = "           << p.stem()           << std::endl;
+    std::cout << "extension = "      << p.extension()      << std::endl;
+
+    std::cout << "root_name      = " << p.root_name()      << std::endl;
+    std::cout << "root_directory = " << p.root_directory() << std::endl;
+    std::cout << "relative_path  = " << p.relative_path()  << std::endl;
+    std::cout << "parent_path    = " << p.parent_path()    << std::endl;
+    std::cout << "filename       = " << p.filename()       << std::endl;
+    std::cout << "stem           = " << p.stem()           << std::endl;
+    std::cout << "extension      = " << p.extension()      << std::endl;

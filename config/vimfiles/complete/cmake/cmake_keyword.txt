@@ -1,0 +1,160 @@
+CMakeListstxt
+include_directories
+cmake_minimum_required
+target_compile_definitions
+target_link_libraries
+add_deinitions
+aux_source_directory
+find_path
+find_program
+find_package
+find_library
+
+
+set
+message
+
+if elseif endif
+
+while
+endwhile
+foreach
+endforeach
+
+LESS GREATER EQUAL MATCHES
+STRLESS STRGREATER STREQUAL
+TARGET_LINK_LIBRARIES
+FIND_PACKAGE
+
+PRIVATE PUBLIC INTERFACE
+CMAKE_BINARY_DIR
+CMAKE_SOURCE_DIR
+CMAKE_CURRENT_SOURCE_DIR
+CMAKE_CURRRENT_BINARY_DIR
+CMAKE_CURRENT_LIST_FILE
+CMAKE_CURRENT_LIST_LINE
+CMAKE_MODULE_PATH
+CMAKE_INCLUDE_CURRENT_DIR
+CMAKE_CURRENT_BINARY_DIR
+CMAKE_CURRENT_SOURCE_DIR 
+CMAKE_INCLUDE_DIRECTORIES_PROJECT_BEFORE
+CMAKE_INCLUDE_PATH CMAKE_LIBRARY_PATH 
+CMAKE_MAJOR_VERSIONCMAKE   
+CMAKE_MINOR_VERSIONCMAKE   
+CMAKE_PATCH_VERSIONCMAKE   
+CMAKE_SYSTEM_LINUX-
+CMAKE_SYSTEM_NAME
+CMAKE_SYSTEM_VERSION
+CMAKE_SYSTEM_PROCESSORi686
+CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTSIF ELSE 
+CMAKE_C_FLAGS
+CMAKE_CXX_FLAGS
+CMAKE_C_FLAGS  CMAKE_CXX_FLAGS 
+CMAKE_MINIMUM_REQUIRED
+CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS 
+
+PROJECT
+PROJECT_BINARY_DIR
+PROJECT_BINARY_DIR 
+PROJECT_SOURCE_DIR 
+PROJECT_NAME
+PROJECT 
+ADD_TEST
+set(CMAKE_CXX_STANDARD 14)
+
+add_subdirectory(absl)
+cmake_minimum_required(VERSION 3.5)
+project(Hello)
+
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+set(CMAKE_INCLUDE_CURRENT_DIR_IN_INTERFACE ON)
+set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+set(Hello_VERSION 1.2.3)
+
+message( STATUS "CMAKE_CURRENT_SOURCE_DIR = ${CMAKE_CURRENT_SOURCE_DIR}" )
+message( STATUS "CMAKE_CURRENT_BINARY_DIR = ${CMAKE_CURRENT_BINARY_DIR}" )
+message( STATUS "CMAKE_INSTALL_INCLUDEDIR = ${CMAKE_INSTALL_INCLUDEDIR}" )
+message( STATUS "CMAKE_INSTALL_LIBDIR = ${CMAKE_INSTALL_LIBDIR}" )
+message( STATUS "CMAKE_INSTALL_BINDIR = ${CMAKE_INSTALL_BINDIR}" )
+
+add_library(Hello SHARED hello.cpp)
+
+# target_sources(Hello PUBLIC FILE_SET HEADERS FILES hello.h)
+
+include(GenerateExportHeader)
+generate_export_header(Hello)
+
+add_subdirectory(world)
+
+add_executable(main main.cpp)
+target_include_directories(main PUBLIC "${PROJECT_SOURCE_DIR}" "${PROJECT_SOURCE_DIR}/world")
+
+
+install(TARGETS Hello EXPORT HelloTargets
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib
+    RUNTIME DESTINATION bin
+    INCLUDES DESTINATION include
+    PUBLIC_HEADER DESTINATION include
+    # FILE_SET HEADER DESTINATION include
+    )
+
+set(ConfigPackageLocation lib/cmake/Hello)
+install(EXPORT HelloTargets
+    FILE
+    HelloTargets.cmake
+    NAMESPACE
+    Hello::
+    DESTINATION
+    ${ConfigPackageLocation}
+    )
+
+export(EXPORT HelloTargets
+    FILE "${CMAKE_CURRENT_BINARY_DIR}/HelloTargets.cmake"
+    NAMESPACE
+    Hello::
+    )
+
+install(DIRECTORY world DESTINATION include)
+
+install(
+    FILES 
+    hello.h
+    "${CMAKE_CURRENT_BINARY_DIR}/hello_export.h"
+    DESTINATION
+    include
+    COMPONENT
+    Devel
+    )
+
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file(
+    "${CMAKE_CURRENT_BINARY_DIR}/Hello/HelloConfigVersion.cmake"
+    VERSION ${Hello_VERSION}
+    COMPATIBILITY AnyNewerVersion
+    )
+
+configure_package_config_file(cmake/HelloConfig.cmake.in
+    "${CMAKE_CURRENT_BINARY_DIR}/Hello/HelloConfig.cmake"
+    INSTALL_DESTINATION ${ConfigPackageLocation}
+    NO_SET_AND_CHECK_MACRO
+    NO_CHECK_REQUIRED_COMPONENTS_MACRO
+    )
+
+install(
+    FILES
+    "${CMAKE_CURRENT_BINARY_DIR}/Hello/HelloConfig.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/Hello/HelloConfigVersion.cmake"
+    DESTINATION
+    ${ConfigPackageLocation}
+    COMPONENT
+    Devel
+    )
+
+
+
+
+    target_link_libraries(main PUBLIC Hello world)
+@PACKAGE_INIT@
+
+  include(${CMAKE_CURRENT_LIST_DIR}/@targets_export_name@.cmake)

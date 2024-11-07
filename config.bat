@@ -1,6 +1,10 @@
 @echo off
 chcp 65001
-REM 配置
+REM 配置 vim
+REM 1. 将 ./config/_vimrc 复制到 %USERPROFILE% 目录下
+REM   - 如果己有 _vimrc 目录存在，请先备份后再执行此文件
+REM 2. 将 ./config/vimfiles 目录复制到 %USERPROFILE% 目录下 
+REM   - 如果己有 vimfiles 目录存在，请先备份后再执行此文件
 
 SET /P isOk="是否要覆盖已存在的 vimrc ?(y/n):"
 
@@ -15,7 +19,6 @@ set batch_disk=%~d0
 
 C:
 cd %USERPROFILE%
-
 
 if exist vimfiles (
     echo Start copy %batch_dir%\config to %cd%\vimfiles...

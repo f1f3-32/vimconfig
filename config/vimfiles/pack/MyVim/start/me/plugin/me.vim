@@ -61,48 +61,6 @@ endif
 
 "}}}
 
-"## 编译源文件 {{{
-"""     根据文件类型编译源文件，有新需求需要自己扩展
-function! me#Compile()
-    execute "w"
-    let winid = 0
-    if &filetype == 'c'
-        "if !isdirectory('build')
-            "execute "!mkdir build"
-        "endif
-        "execute "!gcc % -o ./build/%< && ./build/%<"
-        execut 'start cmd /c "gcc % && a.exe && pause"'
-    elseif &filetype == 'cpp'
-        if has('win32')
-            execute "!start cmd /c g++ % -std=c++20 & a.exe & echo. & echo _____________________ &pause "
-        elseif has('unix')
-            execute "!g++ % -std=c++20 && ./a.out "
-        endif
-        "echo. 逗号前不要有空格，作用是换行
-        "出错的话，cmd 窗口会直接关闭
-    elseif &filetype == "java"
-        execute "!start java %"
-    elseif &filetype == "tex"
-        execute "!start xelatex % && okular %<.pdf"
-    elseif &filetype == "python"
-        execute "!start python %"
-    elseif &filetype == "qml"
-        execute "!start qml %"
-    elseif &filetype == "sh"
-        execute "!./%"
-    elseif &filetype == "vim"
-        execute "source %"
-    endif
-endfunction
-
-"## CMake 构建
-function! me#CMakeBuild()
-    py3file ~/vimfiles/pack/MyVim/start/me/plugin/run_qt.py 
-endfunc
-
-
-"}}}
-
 "## delimate {{{
 """ 给文件添加一个分隔线
 """     可以根据文件类型进行注释,但自动在下一行添加注释的功能会造成影响
@@ -132,7 +90,152 @@ function! me#ChangeShellDir()
 endfunction
 "}}}
 
-"# extra {{{
+"## doxygen comment {{{
+""" 插入 doxygen 的注释
+""" 提取声明行的信息，据依生成相应的注释
+function! me#GenerateDoxygenComment()
+    "let class_name_line_num = search("\\s*\\w+\\s\\+\\w\\+::", "nbW", line("0"))
+    "let class_name = ""
+    "if class_name_line_num
+        "let class_name_line = getline(class_name_line_num) 
+        "let class_name_line = class_name_line[match(class_name_line, "\\s\\+"):]
+        "let class_name = class_name_line[match(class_name_line, "\\w"):match(class_name_line,":")] 
+    "else
+        "let class_name_line_num = search("class")
+        "if class_name_line_num
+            "let class_name_line = getline(class_name_line_num)
+            "let class_name_line = class_name_line[match(class_name_line, "\\s\\+"):]
+            "let class_name = class_name_line[match(class_name_line, "\\w"):match(class_name_line,"\\s")] 
+        "endif
+    "endif
+    "let decl_line = getline(".")
+    "let decl_line_info = s:extraImplement(decl_line, class_name)
+    "let comment_lines = ["/// \\brief"]
+    "let arg_list = decl_line_info["arg list"]
+    "for i in arg_list
+        "call add(comment_lines, "/// \\param " .. i)
+    "endfor
+    "call add(comment_lines, "/// \\return " .. decl_line_info["return type"])
+
+    let cur_line = getline(".")
+    let match_goal = match(cur_line, ";")
+    if match_goal > 0
+        execute "normal A ///< "
+    else
+        let cur_line = getline(".")
+        let spaces = ""
+        for i in cur_line
+            if i == " " || i == "\t"
+                let spaces = spaces .. " "
+            else
+                break
+            endif
+        endfor
+        let brief = "/// \\brief "
+        let param = "/// \\param "
+        let return1 = "/// \\return "
+        let comment_lines = [
+                    \ spaces .. brief, 
+                    \ spaces .. param, 
+                    \ spaces .. return1, 
+                    \]
+        call append(line(".")-1, comment_lines)
+        call cursor(line(".")-3, 12)
+    endif
+endfunction
+"}}}
+
+"## create new file use cursor under text {{{
+""" 使用选中的文件新建一个文件
+""" TODO: 让用户输入文件后缀
+function! me#NewFile()
+    "let wordUnderCursor = expand("<cword>")
+    execute "y"
+    let select_text = getreg("a")
+    execute ":new " .. select_text
+endfunction
+"}}}
+
+"# C++ {{{
+
+"## C++ code sinppet {{{
+
+""" 代码片段
+"""     通过插入横式的快捷键映射，可以使用选择代码片段
+"""     补全，通过已输入的单词进行补全
+func! me#MySnippets()
+    " 读取文件中内容，作为代码片段
+    let mylist = [
+                \ "cout << << endl;", 
+                \ "#include <>", 
+                \ "printf(", 
+                \]
+    
+    call complete(col('.'), mylist)
+    return ''
+endfunc
+
+""" 新 C++ 文件的模板
+function! me#CppTmp()
+    setlocal foldmethod=syntax
+    let curtime = strftime('%c')
+    let cppfile_temp = [
+                \ '/*******************************************************************************', 
+                \ ' * 作者:   林', 
+                \ ' * 始自:   '..curtime,
+                \ ' * 许可证:  ', 
+                \ ' * 描述: ', 
+                \ ' ******************************************************************************/', 
+                \ '', 
+                \ '#include <iostream>', 
+                \ '#include <string>', 
+                \ '#include <lin/common.hpp>', 
+                \ '', 
+                \ 'using namespace std;', 
+                \ '', 
+                \ 'int main(int argc, char** argv)', 
+                \ '{', 
+                \ '    ', 
+                \ '    return 0;', 
+                \ '}']
+    call append('0', cppfile_temp)
+    call cursor(16, 4)
+endfunction
+"}}}
+
+"## switch to source {{{
+let s:switch_file_flag = 0
+""" 在 cpp 与 h 文件中切换
+""" 在光标在 h
+""" 若 cpp 没有打开，在新窗口中打开 cpp
+""" 若 cpp 已经打开，光标跳转到已打开的 cpp
+function! me#SwitchToSource()
+    let file_type = expand("%:e")
+    if s:switch_file_flag
+        if file_type == "h"
+            drop %<.cpp
+            return
+        endif
+        drop %<.h
+        return
+    endif
+
+    if file_type == "h"
+        vnew %<.cpp
+        let s:switch_file_flag = 1
+    elseif file_type == "cpp"
+        vnew %<.h
+        let s:switch_file_flag = 1
+    else
+        echo "不是 C++ 文件！"
+    endif
+endfunction
+"}}}
+
+"## 将 h 中的声明转换为 cpp 中的定义 {{{
+"template<class T>
+"virtual return_type func_name [[attr]] (int arg1 = value) override const;
+"### extra {{{
 """提取操作
 function! s:extraImplement(decl_line, class_name)
     " decl line
@@ -260,7 +363,7 @@ function! s:extraImplement(decl_line, class_name)
 endfunction
 "}}}
 
-"## create implemental {{{
+"### create implemental {{{
 """ 创建实现，依据 h 文件的声明，在 cpp 文件创建实现，另一种情况，文件是 hpp
 """ 类型，则在 hpp 文件中创建
 """ 
@@ -429,144 +532,47 @@ function! me#GenerateDefine()
     "execute "normal :".."cur_line"<cr>"
 endfunction
 "}}}
+" }}} 将 h 中的声明转换为 cpp 中的定义 
 
-"## doxygen comment {{{
-""" 插入 doxygen 的注释
-""" 提取声明行的信息，据依生成相应的注释
-function! me#GenerateDoxygenComment()
-    "let class_name_line_num = search("\\s*\\w+\\s\\+\\w\\+::", "nbW", line("0"))
-    "let class_name = ""
-    "if class_name_line_num
-        "let class_name_line = getline(class_name_line_num) 
-        "let class_name_line = class_name_line[match(class_name_line, "\\s\\+"):]
-        "let class_name = class_name_line[match(class_name_line, "\\w"):match(class_name_line,":")] 
-    "else
-        "let class_name_line_num = search("class")
-        "if class_name_line_num
-            "let class_name_line = getline(class_name_line_num)
-            "let class_name_line = class_name_line[match(class_name_line, "\\s\\+"):]
-            "let class_name = class_name_line[match(class_name_line, "\\w"):match(class_name_line,"\\s")] 
+"## 编译源文件 {{{
+"""     根据文件类型编译源文件，有新需求需要自己扩展
+function! me#Compile()
+    execute "w"
+    let winid = 0
+    if &filetype == 'c'
+        "if !isdirectory('build')
+            "execute "!mkdir build"
         "endif
-    "endif
-    "let decl_line = getline(".")
-    "let decl_line_info = s:extraImplement(decl_line, class_name)
-    "let comment_lines = ["/// \\brief"]
-    "let arg_list = decl_line_info["arg list"]
-    "for i in arg_list
-        "call add(comment_lines, "/// \\param " .. i)
-    "endfor
-    "call add(comment_lines, "/// \\return " .. decl_line_info["return type"])
-
-    let cur_line = getline(".")
-    let match_goal = match(cur_line, ";")
-    if match_goal > 0
-        execute "normal A ///< "
-    else
-        let cur_line = getline(".")
-        let spaces = ""
-        for i in cur_line
-            if i == " " || i == "\t"
-                let spaces = spaces .. " "
-            else
-                break
-            endif
-        endfor
-        let brief = "/// \\brief "
-        let param = "/// \\param "
-        let return1 = "/// \\return "
-        let comment_lines = [
-                    \ spaces .. brief, 
-                    \ spaces .. param, 
-                    \ spaces .. return1, 
-                    \]
-        call append(line(".")-1, comment_lines)
-        call cursor(line(".")-3, 12)
+        "execute "!gcc % -o ./build/%< && ./build/%<"
+        execut 'start cmd /c gcc % && a.exe && pause'
+    elseif &filetype == 'cpp'
+        if has('win32')
+            execute "!start cmd /c g++ % -std=c++20 & a.exe & echo. & echo _____________________ &pause "
+        elseif has('unix')
+            execute "!g++ % -std=c++20 && ./a.out "
+        endif
+        "echo. 逗号前不要有空格，作用是换行
+        "出错的话，cmd 窗口会直接关闭
+    elseif &filetype == "java"
+        execute "!start java %"
+    elseif &filetype == "tex"
+        execute "!start xelatex % && okular %<.pdf"
+    elseif &filetype == "python"
+        execute "!start python %"
+    elseif &filetype == "qml"
+        execute "!start qml %"
+    elseif &filetype == "sh"
+        execute "!./%"
+    elseif &filetype == "vim"
+        execute "source %"
     endif
 endfunction
-"}}}
 
-"## create new file use cursor under text {{{
-""" 使用选中的文件新建一个文件
-""" TODO: 让用户输入文件后缀
-function! me#NewFile()
-    "let wordUnderCursor = expand("<cword>")
-    execute "y"
-    let select_text = getreg("a")
-    execute ":new " .. select_text
-endfunction
-"}}}
-
-"## C++ code sinppet {{{
-
-""" 代码片段
-"""     通过插入横式的快捷键映射，可以使用选择代码片段
-"""     补全，通过已输入的单词进行补全
-func! me#MySnippets()
-    " 读取文件中内容，作为代码片段
-    let mylist = [
-                \ "cout << << endl;", 
-                \ "#include <>", 
-                \ "printf(", 
-                \]
-    
-    call complete(col('.'), mylist)
-    return ''
+"## CMake 构建
+function! me#CMakeBuild()
+    py3file ~/vimfiles/pack/MyVim/start/me/plugin/run_qt.py 
 endfunc
 
-""" 新 C++ 文件的模板
-function! me#CppTmp()
-    setlocal foldmethod=syntax
-    let curtime = strftime('%c')
-    let cppfile_temp = [
-                \ '/*******************************************************************************', 
-                \ ' * 作者:   林', 
-                \ ' * 始自:   '..curtime,
-                \ ' * 许可证:  ', 
-                \ ' * 描述: ', 
-                \ ' ******************************************************************************/', 
-                \ '', 
-                \ '#include <iostream>', 
-                \ '#include <string>', 
-                \ '#include <lin/common.hpp>', 
-                \ '', 
-                \ 'using namespace std;', 
-                \ '', 
-                \ 'int main(int argc, char** argv)', 
-                \ '{', 
-                \ '    ', 
-                \ '    return 0;', 
-                \ '}']
-    call append('0', cppfile_temp)
-    call cursor(16, 4)
-endfunction
+
 "}}}
-
-"## switch to source {{{
-let s:switch_file_flag = 0
-""" 在 cpp 与 h 文件中切换
-""" 在光标在 h
-""" 若 cpp 没有打开，在新窗口中打开 cpp
-""" 若 cpp 已经打开，光标跳转到已打开的 cpp
-function! me#SwitchToSource()
-    let file_type = expand("%:e")
-    if s:switch_file_flag
-        if file_type == "h"
-            drop %<.cpp
-            return
-        endif
-        drop %<.h
-        return
-    endif
-
-    if file_type == "h"
-        vnew %<.cpp
-        let s:switch_file_flag = 1
-    elseif file_type == "cpp"
-        vnew %<.h
-        let s:switch_file_flag = 1
-    else
-        echo "不是 C++ 文件！"
-    endif
-endfunction
-"}}}
-
+"}}} C++
