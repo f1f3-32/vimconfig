@@ -78,6 +78,9 @@
 
 "### 查找替换 : substitute, find, replace {{{
 "2024-07-28 01:16
+"
+"#### 替换多个**文件**中指定文本
+"
 " 被替换者: test_123
 " 替换者: new_123
 " 在同一个目录<dir>中的所有 h 文件中
@@ -115,13 +118,22 @@
 
 call plug#begin('~/.vim/plugged')
 
+Plug 'mechatroner/rainbow_csv'
+
+"生成 vim 启动时间的数据，然后优化启动时间
+Plug 'hyiltiz/vim-plugins-profile'
+
+" 显示可见缓存内容的上下文，它支持非常广泛的文件类型，在查找源代码文件时非常有用。
+"在大多数编程语言中，此上下文将显示您正在查看的函数，以及在该函数中可见代码周围的循环或条件。
+Plug 'wellle/context.vim'
 Plug 'itchyny/lightline.vim'
-Plug 'zyedidia/vim-snake '
+Plug 'zyedidia/vim-snake'
 Plug 'easymotion/vim-easymotion'
 Plug 'junegunn/goyo.vim'
 Plug 'junegunn/limelight.vim'
 Plug 'junegunn/vim-easy-align'
 Plug 'luochen1990/rainbow'
+Plug 'matze/vim-move'
 "Plug 'neoclide/coc.nvim', {'tag': '*', 'branch': 'release'}
 "要说一句实话，补全是很好的，但是我用的不是很习惯，还是使用 vim
 "自带的补全感觉舒服，而且还是很好用的，只要进行自定义就行，就是
@@ -173,16 +185,13 @@ call plug#end()
 "### EasyAlign
 
 vnoremap <Enter> <Plug>(EasyAlign)
-xnoremap <Leader>g :Goyo<CR>
+"xnoremap <Leader>g :Goyo<CR>
 xnoremap ga <Plug>(EasyAlign)
 nnoremap ga <Plug>(EasyAlign)
-let mapleader = "\\"
-
 
 "### rainbow
 
 let g:rainbow_active=1
-
 
 "### limelight
 
@@ -213,11 +222,9 @@ let g:limelight_conceal_guifg = 'DarkGray'
 let g:limelight_conceal_ctermfg = 240
 let g:limelight_conceal_ctermfg = 'gray'
 
-
 "### EasyMotion
 
-map <Leader> <Plug>(easymotion-prefix)
-
+"map <Leader> <Plug>(easymotion-prefix)
 
 "### DoxygenToolkit
 
@@ -243,13 +250,11 @@ let g:DoxygenToolkit_classTag             = "\\class "
 let g:DoxygenToolkit_authorName           = "linlin"
 let g:DoxygenToolkit_licenseTag           = "My onw license"
 
-
 "### workspace 
 
 "let g:workspace_autocreate = 1
 "let g:workspace_session_name = 'Session.vim'
 "let g:workspace_persist_undo_history = 1
-
 
 "### sneak 
 
@@ -295,7 +300,6 @@ let g:sneak#label = 1
 "### Goyo
 
 " Goyo 要与 Limelight 聚和使用
-
 
 "### UltiSnips 
 
@@ -381,14 +385,36 @@ filetype indent on   " 根据文件类型自动缩进
 filetype on
 set fileencodings=utf-8,gbk
 
+"### gui options {{{
+    
 "set showtabline=1
 "set guioptions-=T
 "set guioptions-=m
-set guioptions-=e
+set guioptions=
 set guifont=AnonymicePro_Nerd_Font_Mono:h16
 set laststatus=2
 "set guifont=Lucida_Console:h18
 "set guifont=Courier_New:b:h16
+
+
+let m_show_gui = v:false
+
+"切换菜单、工具栏的显示
+function! SwitchGui()
+    if g:m_show_gui
+        let g:m_show_gui = v:false
+        set guioptions-=m
+        set guioptions-=T
+    else
+        let g:m_show_gui = v:true
+        set guioptions+=m
+        set guioptions+=T
+    endif
+endfunction
+
+
+"}}} gui options
+
 "set completeopt=menu,menuone,noselect
 
 "set textwidth=80       " 限制一行的长度，不错的功能
@@ -441,26 +467,10 @@ set runtimepath+=~\.vim
 
 "## mapping {{{
 
-"function key
-nnoremap <F2> :NERDTreeToggle<CR>
-"nnoremap <F2> :Vexplore<CR>
-nnoremap <F3> :tabnew<CR>
-nnoremap <F7> :w<CR>
-nnoremap <F6> :call me#Compile()<CR>
-nnoremap <F8> :wa<CR>
-inoremap <F8> <C-R>=ListMonths()<CR>
-nnoremap <F8> :w<CR>
-nnoremap <F9> :Tagbar<CR>
-nnoremap <F10> :wqa<CR>
-nnoremap gs :call me#SwitchToSource()<CR>
-
-"insert mode function key
-inoremap <F2> <CTRL-E>
-
-
-noremap cx :call CopyLine()<CR>
-nnoremap <Space> <C-d>
-nnoremap <M-w> <C-w>
+"### leader key {{{
+"let mapleader = "\\"
+let mapleader = "\<space>"
+"let mapleader = " "
 nnoremap <LEADER>z ZZ
 nnoremap <LEADER>v :Goyo<CR>
 nnoremap <LEADER>t <c-w>T
@@ -473,22 +483,48 @@ nnoremap <LEADER>md :tabnew $HOME/vimfiles/pack/MyVim<CR>
 nnoremap <LEADER>i  :call me#CreateImplement()<CR>
 nnoremap <LEADER>e  :call me#GenerateDefine()<CR>
 nnoremap <LEADER>cd :cd ~/code/cpp/basic<CR>
+nnoremap <LEADER>q :
+nnoremap <Leader>g :call SwitchGui()<CR>
+map <Leader> <Plug>(easymotion-prefix)
+"}}}  leader key
+
+"normal mode
+"--------------------------------------------------------------------------------
+"function key
+nnoremap <F2> :NERDTreeToggle<CR>
+"nnoremap <F2> :Vexplore<CR>
+nnoremap <F3> :tabnew<CR>
+nnoremap <F6> :call me#Compile()<CR>
+nnoremap <F7> :w<CR>
+nnoremap <F8> :wa<CR>
+nnoremap <F9> :Tagbar<CR>
+nnoremap <F10> :wqa<CR>
+nnoremap gs :call me#SwitchToSource()<CR>
+nnoremap cx :call CopyLine()<CR>
+"nnoremap <Space> <C-d>
+nnoremap <M-w> <C-w>
 nnoremap <c-q> :
 "nnoremap <c-v> <c-q> "与终端中的快捷键冲突
 nnoremap <C-n> :bel vnew<cr>
 nnoremap <C-b> :call me#Compile()<CR>
 "nnoremap <c-s> :w<cr>
+"nnoremap <LEADER>mn :set nu<CR>
+"nnoremap <LEADER>md :tabnew $HOME/AppData/Local/nvim/pack/plugins/start/me<CR>
+
+"insert mode
+""--------------------------------------------------------------------------------
+inoremap <F2> <CTRL-E>
+inoremap <F8> <C-R>=ListMonths()<CR>
+
+inoremap <c-q> <Esc>:
 "inoremap <c-s> <esc>:w<cr>
 "inoremap <C-L> <C-X><C-L>
 "inoremap <C-D> <C-X><C-D>
 "inoremap <C-F> <C-X><C-F>
 "inoremap <C-]> <C-X><C-]>
-inoremap <c-q> <Esc>:
 "inoremap <silent><expr> <Tab> coc#pum#confirm()
 "inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
 "inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-"nnoremap <LEADER>mn :set nu<CR>
-"nnoremap <LEADER>md :tabnew $HOME/AppData/Local/nvim/pack/plugins/start/me<CR>
 "inoremap <S-Alt> <Esc>:w!<cr>
 
 "nnoremap <LEADER>d :call append(line('.'), strftime('%c'))<CR>
@@ -793,9 +829,9 @@ function! CMakeRun()
 endfunction
 
 
-function! VSOpen()
+"function! VSOpen()
 "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\devenv.exe"
-endfunction
+"endfunction
 
 "删除当前行的所有空格，并将它与上一行相连接
 fun! JoinLine() 
@@ -807,15 +843,15 @@ fun! JoinLine()
     if has_minus > -1 
         let symbol_1 = "_"
     endif
-    let indent = match(cur_line, "\\w")
-    let sub_str = trim(cur_line)
-    let sub_str = trim(sub_str, "-", 2)
-    let sub_str = trim(sub_str, " ", 2)
-    let sub_str = substitute(sub_str, " ", symbol_1, "g")
-    let cur_line_num = getcurpos(".")
-    let above_line = getline(cur_line_num[1]-1)
-    let is_empty_line = match(above_line, "^\\s*$")
-    if is_empty_line == -1
+    let indent         = match(cur_line, "\\w")
+    let sub_str        = trim(cur_line)
+    let sub_str        = trim(sub_str, "-", 2)
+    let sub_str        = trim(sub_str, " ", 2)
+    let sub_str        = substitute(sub_str, " ", symbol_1, "g")
+    let cur_line_num   = getcurpos(".")
+    let above_line     = getline(cur_line_num[1]-1)
+    let is_empty_line  = match(above_line, "^\\s*$")
+    if is_empty_line  == -1
         "execute "normal kJA "
         call setline(cur_line_num[1]-1, above_line..sub_str)
         call setline(cur_line_num[1], "")
@@ -832,7 +868,7 @@ endfun
 
 "inoremap <C-F> <ESC>V:s/\s//g<CR>:noh<CR>kJA
 "inoremap <C-F> <C-R>=JoinLine()<CR>
-inoremap <C-F> <ESC>:call JoinLine()<CR>A
+inoremap <C-I> <ESC>:call JoinLine()<CR>A
 
 "}}} ## menu
 
@@ -881,9 +917,11 @@ inoremap <C-F> <ESC>:call JoinLine()<CR>A
 "\endmd
 
 inoremap <C-]> <C-X><C-]>
-inoremap <C-F> <C-X><C-F>
+"inoremap <C-F> <C-X><C-F>
 inoremap <C-L> <C-X><C-L>
-inoremap <C-I> <C-E>
+
+" 取消补全
+"inoremap <C-I> <C-E>
 
 "### thesaurus
 set thesaurus+=~/vimfiles/complete/thesaurus/cpp.txt

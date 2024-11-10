@@ -85,7 +85,7 @@ endfunction
 """     依据当前打开文件的路径，将 vim 的路径改为相应的路径
 """ TODO: 功能待完成
 function! me#ChangeShellDir()
-    let file_dir = expand("#:h")
+    let file_dir = expand("%:p:h")
     call chdir(file_dir)
 endfunction
 "}}}
