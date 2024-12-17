@@ -37,9 +37,9 @@ map <Plug>MeImpl <SID>Implement
 map <SID>Implement :call me#CreateImplement()<CR>
 
 "- me#GenerateDoxygenComment
-if !hasmapto('<Plug>CreateClass')
-    map <Leader>c <Plug>GenerateDoxygen
-endif
+"if !hasmapto('<Plug>CreateClass')
+    "map <Leader>c <Plug>GenerateDoxygen
+"endif
 
 map <Plug>GenerateDoxygen <SID>SIDGenerateDoxygen
 map <SID>SIDGenerateDoxygen :call me#GenerateDoxygenComment()<CR>
@@ -67,15 +67,15 @@ endif
 function! me#Delimate()
     let filename  = split(expand('%'), '/')
     if &filetype == 'c'|| &filetype == 'cpp' || &filetype == 'java'
-        execute "normal o\<Esc>80a-\<Esc>"
+        execute "normal o\<Esc>080a-\<Esc>0"
     elseif filename[-1] == 'CMakeLists.txt' || &filetype == 'python'
-        execute "normal o\<Esc>a#\<Esc>80a-\<Esc>"
+        execute "normal o\<Esc>0a#\<Esc>080a-\<Esc>0"
     elseif &filetype == 'py'
-        execute "normal o\<Esc>a#\<Esc>80a-\<Esc>"
+        execute "normal o\<Esc>0a#\<Esc>080a-\<Esc>0"
     elseif &filetype == 'vim'
-        execute "normal o\<Esc>a\"\<Esc>80a-\<Esc>"
+        execute "normal o\<Esc>0s\"\<Esc>079a-\<Esc>0"
     else
-        execute "normal o\<Esc>80a-\<Esc>"
+        execute "normal o\<Esc>080a-\<Esc>0"
     endif
 endfunction
 "}}}
