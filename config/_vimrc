@@ -1,3 +1,4 @@
 source ~\vimfiles\vim-settings\basic-settings.vim
 source ~\vimfiles\vim-settings\plug-settings.vim
 source ~\vimfiles\vim-settings\depend-on-settings.vim       
+"~\vimfiles\vim-settings\use-method.md

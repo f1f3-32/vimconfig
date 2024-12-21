@@ -110,3 +110,4 @@ e D:\user\code\libraries\include\lin\lin_observer.hpp
 #define FMT_HEADER_ONLY 1
 #define FMT_HEADER_ONLY 1
 #include <fmt/format.h>
+include(FetchContent)

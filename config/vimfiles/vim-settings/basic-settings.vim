@@ -142,6 +142,8 @@ nnoremap <Leader>j <C-W>j
 nnoremap <Leader>k <C-W>k
 nnoremap <Leader>l <C-W>l
 inoremap <C-D> <ESC>:call CopyLine_InsertMode()<CR>a
+inoremap <C-Enter> <Esc>o
+inoremap <S-Enter> <Esc>O
 
 "}}}  leader key
 
@@ -298,6 +300,19 @@ function! MDLink()
 endfunction
 
 command -nargs=0 MDLink call MDLink()
+
+
+"Function: C++ include
+function! CInc() range
+    for i in range(a:firstline, a:lastline)
+        call cursor(i, 1)
+        execute "normal I#include<\<Esc>A>\<Esc>"
+        "execute "normal @a"
+    endfor
+    " current line up and until the first line
+endfunction
+
+command -nargs=0 -range CInc <line1>,<line2>call CInc()
 
 
 "### 中文输入法问题 {{{
